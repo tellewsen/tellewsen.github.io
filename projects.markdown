@@ -4,7 +4,6 @@ title: Projects
 permalink: /projects/
 ---
 
-# Projects
 
 Prosjekt|Beskrivelse|Nøkkelord
 --------|-----------|---------
