@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "First post!"
+title:  "Welcome to the site!"
 date:   2023-07-02 15:05:49 +0200
 categories: 
 ---
