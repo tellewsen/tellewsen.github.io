@@ -28,7 +28,7 @@ twitter_username: tellewsen
 github_username:  tellewsen
 
 # Build settings
-remote-theme: pages-themes/hacker@v0.2.0
+remote-theme: pages-themes/architect@v0.2.0
 plugins:
   - jekyll-feed
   - jekyll-remote-theme
