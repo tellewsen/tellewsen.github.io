@@ -87,11 +87,13 @@
 </div>
 
 <table>
-	{#each validfnrs as fnr_row}
-		<tr>
-			{#each fnr_row as fnr}
-				<td>{fnr}</td>
-			{/each}
-		</tr>
-	{/each}
+	<tbody>
+		{#each validfnrs as fnr_row}
+			<tr>
+				{#each fnr_row as fnr}
+					<td>{fnr}</td>
+				{/each}
+			</tr>
+		{/each}
+	</tbody>
 </table>

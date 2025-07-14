@@ -1,6 +1,9 @@
 <h1>Utilities</h1>
-<li>
-	<le>
+<menu>
+	<li>
 		<a href="/utils/fnr">Norwegian national identifier generator</a>
-	</le>
-</li>
+	</li>
+	<li>
+		<a href="/utils/qr">QR code generator</a>
+	</li>
+</menu>
