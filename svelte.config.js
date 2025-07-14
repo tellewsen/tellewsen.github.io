@@ -1,13 +1,16 @@
 import adapter from '@sveltejs/adapter-static';
+import { sveltePreprocess } from 'svelte-preprocess';
+
+const dev = process.env.NODE_ENV === 'development';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
+	preprocess: sveltePreprocess(),
+
 	kit: {
-		adapter: adapter({
-			fallback: '404.html'
-		}),
+		adapter: adapter(),
 		paths: {
-			base: process.argv.includes('dev') ? '' : process.env.BASE_PATH
+			base: ''
 		}
 	}
 };
