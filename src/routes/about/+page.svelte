@@ -6,8 +6,9 @@
 		>. I used to work at <a target="_blank" href="https://uio.no">University of Oslo</a>.
 	</p>
 	<p>
-		My specialty is backend programming using python. I have written services that handle storing,
-		serving and transferring, personal and financial information using a wide range of designs.
+		My specialty is backend programming using python. Mostly to make integrations between different
+		systems. I have also written services that handle storing, serving and transferring, personal
+		and financial information using a wide range of designs.
 	</p>
 	<p>
 		For database access I have done both the old school approach of writing raw SQL, as well as
@@ -29,15 +30,12 @@
 	</p>
 	<p>
 		Speaking of frontend, I know how to write one using typescript with React.js and some of the
-		regular libraries typically used.
+		regular libraries typically used. As you can see, this site is written in Svelte so that works
+		too.
 	</p>
-	<!-- Languages, frameworks etc that I know how to use:
-	<ul>
-		<li>
-			Python, Django, Django-rest-framework, SqlAlchemy, Flask, FastApi, Pydantic, Pytest, requests,
-			requests\_mock, freezegun, pika, celery, (Numpy, Matplotlib)
-		</li>
-		<li>React, react-hook-form, react-router-dom, typescript, i18next</li>
-		<li>Gunicorn, Uvicorn, Helm, Kubernetes, Docker, Linux</li>
-	</ul> -->
+	<p>
+		On the data analysis side I've used Microsoft Fabric for a while. It's nice with the simple
+		feedback but the source control is kind of slapped on at the end, making it uncomfortable when
+		you're used to strict CI/CD pipelines and such.
+	</p>
 </div>
