@@ -1,7 +1,3 @@
-<script>
-	import Footer from '$lib/Footer.svelte';
-</script>
-
 <nav class="nav">
 	<a href="/">Home</a>
 	<a href="/posts">Posts</a>
@@ -10,7 +6,6 @@
 </nav>
 
 <slot />
-<Footer />
 
 <style>
 	:global(body) {
