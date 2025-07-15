@@ -10,8 +10,9 @@ const config = {
 	kit: {
 		adapter: adapter(),
 		paths: {
-			base: ''
-		}
+			base: '',        // Required for custom domain
+		},
+		appDir: 'internal' // This renames `_app` to `internal`
 	}
 };
 
