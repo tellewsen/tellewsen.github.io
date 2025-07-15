@@ -1,0 +1,3 @@
+import"../chunks/CWj6FrbW.js";import"../chunks/BFI5PvTN.js";import{f as i,s,b as n,a as r,c as m,r as p,n as l}from"../chunks/CLrXTEV3.js";import{T as c}from"../chunks/DoHooH1U.js";var f=i(`<h1>Welcome to the site!</h1> <p><!></p> <div>Welcome to the site. Nothing special to say so far. At the moment this is just a convenient place
+	to keep track of projects I've been a part of. Hopefully moving to this format will make adding
+	small updates about interesting things more convenient in the future.</div>`,1);function u(o){var t=f(),e=s(n(t),2),a=m(e);c(a,{iso:"2023-07-02T15:05:49+02:00"}),p(e),l(2),r(o,t)}export{u as component};

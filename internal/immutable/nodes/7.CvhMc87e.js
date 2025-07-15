@@ -1,0 +1,1 @@
+import"../chunks/CWj6FrbW.js";import"../chunks/BFI5PvTN.js";import{f as e,a as i,n as t}from"../chunks/CLrXTEV3.js";var n=e('<h1>Utilities</h1> <menu><li><a href="/utils/fnr">Norwegian national identifier generator</a></li> <li><a href="/utils/qr">QR code generator</a></li></menu>',1);function l(r){var a=n();t(2),i(r,a)}export{l as component};

@@ -1,1 +1,0 @@
-import"../chunks/CWj6FrbW.js";import"../chunks/CRS7fLFB.js";import{f as e,a,n as r}from"../chunks/C4UO12Dh.js";var m=e('<h1>Posts</h1> <li><le><a href="/posts/20230702">2023-07-02 - Welcome to the site</a></le></li>',1);function i(o){var t=m();r(2),a(o,t)}export{i as component};
