@@ -2,36 +2,54 @@
 	import { onMount } from 'svelte';
 	import QRCode from 'qrcode';
 
-	let text = '';
-	let qrCodeDataUrl: string = '';
+	let input = '';
+	let dataUrl = '';
+	let error = '';
 
-	const generateQRCode = async () => {
-		if (text.trim()) {
-			qrCodeDataUrl = await QRCode.toDataURL(text);
-		} else {
-			qrCodeDataUrl = '';
+	$: generateQRCode();
+
+	function generateQRCode() {
+		if (!input) {
+			dataUrl = '';
+			error = '';
+			return;
 		}
-	};
+
+		QRCode.toDataURL(input)
+			.then((url) => {
+				dataUrl = url;
+				error = '';
+			})
+			.catch((err) => {
+				dataUrl = '';
+				error = '❌ Could not generate QR code: ' + err.message;
+			});
+	}
 </script>
 
 <div class="container">
 	<h1>QR Code Generator</h1>
-	<input type="text" bind:value={text} placeholder="Enter text or URL" />
+	<input type="text" bind:value={input} placeholder="Enter text or URL" />
 	<br />
 	<button on:click={generateQRCode}>Generate</button>
-
-	{#if qrCodeDataUrl}
+	{#if error}
+		<p class="error">{error}</p>
+	{:else if dataUrl}
 		<div>
-			<img src={qrCodeDataUrl} alt="QR Code" />
+			<img src={dataUrl} alt="QR Code" />
 		</div>
 	{/if}
 </div>
 
 <style>
+	.error {
+		color: red;
+		margin-top: 0.5rem;
+	}
 	.container {
 		max-width: 500px;
-		margin: 2rem auto;
-		text-align: center;
+		/* margin: 2rem auto; */
+		/* text-align: center; */
 		font-family: sans-serif;
 	}
 
