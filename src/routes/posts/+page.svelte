@@ -1,6 +1,9 @@
 <h1>Posts</h1>
-<li>
-	<le>
+<ol>
+	<li>
 		<a href="/posts/20230702">2023-07-02 - Welcome to the site</a>
-	</le>
-</li>
+	</li>
+	<li>
+		<a href="/posts/20250715">2025-07-15 - A qr code appears!</a>
+	</li>
+</ol>
