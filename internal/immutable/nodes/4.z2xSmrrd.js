@@ -1,1 +1,0 @@
-import"../chunks/CWj6FrbW.js";import"../chunks/Dip4rU8U.js";import{f as t,a as e,n as r}from"../chunks/7vLXTv7l.js";var p=t('<h1>Posts</h1> <ol><li><a href="/posts/20230702">2023-07-02 - Welcome to the site</a></li> <li><a href="/posts/20250715">2025-07-15 - A qr code appears!</a></li></ol>',1);function l(o){var a=p();r(2),e(o,a)}export{l as component};
