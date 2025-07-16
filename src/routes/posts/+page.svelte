@@ -6,4 +6,7 @@
 	<li>
 		<a href="/posts/20250715">2025-07-15 - A qr code appears!</a>
 	</li>
+	<li>
+		<a href="/posts/20250716">2025-07-16 - Stuff pictures in your qr codes!</a>
+	</li>
 </ol>
