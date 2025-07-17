@@ -9,4 +9,7 @@
 	<li>
 		<a href="/posts/20250716">2025-07-16 - Stuff pictures in your qr codes!</a>
 	</li>
+	<li>
+		<a href="/posts/20250718">2025-07-18 - Wifi mode for qr codes</a>
+	</li>
 </ol>
