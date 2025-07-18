@@ -1,0 +1,3 @@
+import"../chunks/CWj6FrbW.js";import"../chunks/DCGeaO_y.js";import{f as r,s,b as i,a as n,c as p,r as m,n as h}from"../chunks/C4OlqgHy.js";import{T as c}from"../chunks/DboXt0GA.js";var d=r(`<h1>A qr code appears!</h1> <p><!></p> <div>The site now has a <a href="/utils/qr">QR code generator</a> in the utils section. It uses the npm
+	package <a href="https://www.npmjs.com/package/qrcode">qrcode</a>. Maybe I'll write my own one at
+	some point just to understand the algorithm.</div>`,1);function v(t){var a=d(),e=s(i(a),2),o=p(e);c(o,{iso:"2025-07-15T09:30:05+02:00"}),m(e),h(2),n(t,a)}export{v as component};

@@ -1,0 +1,3 @@
+import"../chunks/CWj6FrbW.js";import"../chunks/DCGeaO_y.js";import{f as s,s as a,b as i,a as n,c as p,r as m,n as h}from"../chunks/C4OlqgHy.js";import{T as u}from"../chunks/DboXt0GA.js";var d=s(`<h1>Stuff pictures in your qr codes!</h1> <p><!></p> <div>The site got a <a href="/utils/qr">QR code generator</a> yesterday. However, pretty much everyone wants
+	to stuff a logo or something in their codes, so now you can do that here as well. At the moment it's
+	quite stupid, so if you upload something with transparent parts you're going to get something ugly.</div>`,1);function y(e){var t=d(),o=a(i(t),2),r=p(o);u(r,{iso:"2025-07-16T08:45:00+02:00"}),m(o),h(2),n(e,t)}export{y as component};

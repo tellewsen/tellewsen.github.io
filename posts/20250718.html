@@ -19,7 +19,7 @@
 		<link rel="modulepreload" href="../internal/immutable/chunks/DJbRbh_7.js">
 		<link rel="modulepreload" href="../internal/immutable/nodes/0.Be-xzgaQ.js">
 		<link rel="modulepreload" href="../internal/immutable/chunks/DCGeaO_y.js">
-		<link rel="modulepreload" href="../internal/immutable/nodes/6.Fv5dfJAa.js">
+		<link rel="modulepreload" href="../internal/immutable/nodes/8.BKi92G4Q.js">
 		<link rel="modulepreload" href="../internal/immutable/chunks/DboXt0GA.js">
 		<link rel="modulepreload" href="../internal/immutable/chunks/t19VBaJd.js">
 		<link rel="modulepreload" href="../internal/immutable/chunks/DwJaT0T-.js">
@@ -114,9 +114,8 @@
 </head>
 
 <body data-sveltekit-preload-data="hover">
-	<div style="display: contents"><!--[--><!--[--><!----><nav class="nav svelte-1euoam8"><a href="/">Home</a> <a href="/posts">Posts</a> <a href="/utils">Utilities</a> <a href="/about">About</a></nav> <!----><!----><h1>A qr code appears!</h1> <p><time datetime="2025-07-15T09:30:05+02:00"><!--[!-->2025-07-15T09:30:05+02:00<!--]--></time><!----></p> <div>The site now has a <a href="/utils/qr">QR code generator</a> in the utils section. It uses the npm
-	package <a href="https://www.npmjs.com/package/qrcode">qrcode</a>. Maybe I'll write my own one at
-	some point just to understand the algorithm.</div><!----><!----><!----><!--]--> <!--[!--><!--]--><!--]-->
+	<div style="display: contents"><!--[--><!--[--><!----><nav class="nav svelte-1euoam8"><a href="/">Home</a> <a href="/posts">Posts</a> <a href="/utils">Utilities</a> <a href="/about">About</a></nav> <!----><!----><h1>Wifi mode for qr codes</h1> <p><time datetime="2025-07-16T08:45:00+02:00"><!--[!-->2025-07-16T08:45:00+02:00<!--]--></time><!----></p> <div>The <a href="/utils/qr">QR code generator</a> now supports "wifi mode". Basically you input the ssid, password, etc. and you get a qr code you scan to connect to your wifi.
+    I've tried to give us the bare minimum specified in section 7 of the <a href="https://www.wi-fi.org/system/files/WPA3%20Specification%20v3.5.pdf">WPA 3 specification</a>.</div><!----><!----><!----><!--]--> <!--[!--><!--]--><!--]-->
 			
 			<script>
 				{
@@ -131,7 +130,7 @@
 						import("../internal/immutable/entry/app.rjfbSOjc.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element, {
-							node_ids: [0, 6],
+							node_ids: [0, 8],
 							data: [{type:"data",data:null,uses:{}},null],
 							form: null,
 							error: null
