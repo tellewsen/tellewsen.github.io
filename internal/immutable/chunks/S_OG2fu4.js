@@ -1,0 +1,1 @@
+const e=()=>({metadata:{title:"Stuff pictures in your qr codes!",date:"2025-07-16T08:45:00+02:00"}}),t=Object.freeze(Object.defineProperty({__proto__:null,load:e},Symbol.toStringTag,{value:"Module"}));export{t as _};

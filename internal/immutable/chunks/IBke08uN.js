@@ -1,0 +1,1 @@
+const e=()=>({metadata:{title:"Welcome to the site!",date:"2023-07-02T15:05:49+02:00"}}),t=Object.freeze(Object.defineProperty({__proto__:null,load:e},Symbol.toStringTag,{value:"Module"}));export{t as _};
