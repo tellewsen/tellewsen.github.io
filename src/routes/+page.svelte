@@ -8,5 +8,5 @@
 			target="_blank">Svelte</a
 		> as a client side only page so that it can be hosted for free using Github Pages.
 	</p>
-	<p></p>
+	<p>Check out the <a href="/posts">posts</a> section for updates</p>
 </div>
