@@ -7,7 +7,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	
 		<link href="../internal/immutable/assets/0.B0ZiTHkZ.css" rel="stylesheet">
-		<link href="../internal/immutable/assets/13.BkLQzeMC.css" rel="stylesheet">
+		<link href="../internal/immutable/assets/11.BWDBIuKk.css" rel="stylesheet">
 		<link rel="modulepreload" href="../internal/immutable/entry/start.D-HUCTET.js">
 		<link rel="modulepreload" href="../internal/immutable/chunks/Dl4E04m4.js">
 		<link rel="modulepreload" href="../internal/immutable/chunks/BW9nRG8X.js">
@@ -21,9 +21,7 @@
 		<link rel="modulepreload" href="../internal/immutable/chunks/BLXvIcd3.js">
 		<link rel="modulepreload" href="../internal/immutable/nodes/0.CeMLkATw.js">
 		<link rel="modulepreload" href="../internal/immutable/chunks/D8W01uTf.js">
-		<link rel="modulepreload" href="../internal/immutable/nodes/13.DH50q05c.js">
-		<link rel="modulepreload" href="../internal/immutable/chunks/CSrljK00.js">
-		<link rel="modulepreload" href="../internal/immutable/chunks/o9YmBx1s.js">
+		<link rel="modulepreload" href="../internal/immutable/nodes/11.BVcQKTow.js">
 		<link rel="modulepreload" href="../internal/immutable/chunks/C3jwBQid.js">
 
 
@@ -116,7 +114,12 @@
 </head>
 
 <body data-sveltekit-preload-data="hover">
-	<div style="display: contents"><!--[--><!--[--><!----><nav class="nav svelte-u0euwv"><a href="/">Home</a> <a href="/posts">Posts</a> <a href="/utils">Utilities</a> <a href="/about">About</a></nav> <!----><!----><div class="container"><h1>QR Code Generator</h1> <label><input type="checkbox"/> Wi-Fi Mode</label> <!--[!--><div><input class="input" placeholder="Enter text to encode" value=""/></div><!--]--> <!--[!--><!--]--> <div class="upload-section svelte-1fgbore"><label for="logoUpload">Upload logo:</label> <input id="logoUpload" type="file" accept="image/*"/> <!--[!--><!--]--></div> <canvas width="512" height="512" class="canvas svelte-1fgbore"></canvas></div><!----><!----><!----><!--]--> <!--[!--><!--]--><!--]-->
+	<div style="display: contents"><!--[--><!--[--><!----><nav class="nav svelte-u0euwv"><a href="/">Home</a> <a href="/posts">Posts</a> <a href="/utils">Utilities</a> <a href="/about">About</a></nav> <!----><!----><div style="position: relative; width: 100%; max-width: 900px;"><canvas class="svelte-c2dhon"></canvas> <div class="hover-box svelte-c2dhon"><!--[!--><div>Hover over chart</div><!--]--></div> <p>The calculator uses the formula and thresholds described in the <a href="https://en.wikipedia.org/wiki/Body_mass_index">Wikipedia article</a> for adults.</p> <p>Please remember that BMI is just a number to give you an idea if your weight may be unhealthy.
+		It doesn't tell the whole story, and I only made this thing because I wanted to see how you can
+		draw plots without using libraries. I highly reccommend reading the wikipedia article linked
+		above, as it has some really interesting points around the limitations of BMI.</p> <p>I had never heard of the <a href="https://en.wikipedia.org/wiki/Corpulence_index">Corpulence index</a>, which seems to be a much better measure since it scales by height cubed like you'd expect for
+		people living in three dimensions. Maybe this page shows a curpulence index calculator the next
+		time you visit?</p></div><!----><!----><!----><!--]--> <!--[!--><!--]--><!--]-->
 			
 			<script>
 				{
@@ -131,7 +134,7 @@
 						import("../internal/immutable/entry/app.DEyfZNK-.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element, {
-							node_ids: [0, 13],
+							node_ids: [0, 11],
 							data: [{type:"data",data:null,uses:{}},null],
 							form: null,
 							error: null
