@@ -6,4 +6,7 @@
 	<li>
 		<a href="/utils/qr">QR code generator</a>
 	</li>
+	<li>
+		<a href="/utils/bmi">BMI calculator</a>
+	</li>
 </menu>

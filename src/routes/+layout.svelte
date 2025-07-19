@@ -8,13 +8,9 @@
 <slot />
 
 <style>
-	:global(body) {
-		width: 50%;
-		margin: auto;
-	}
 	.nav {
-		width: 50%;
-		align-items: center;
+		width: 100%;
+		align-items: left;
 		margin: auto;
 	}
 </style>

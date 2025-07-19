@@ -29,6 +29,8 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  width: 50%;
+  margin: auto;
 }
 
 input {
@@ -48,13 +50,13 @@ h1 {
 .card {
   padding: 2em;
 }
-
+/* 
 #app {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-}
+} */
 
 button {
   border-radius: 8px;

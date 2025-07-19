@@ -12,4 +12,7 @@
 	<li>
 		<a href="/posts/20250718">2025-07-18 - Wifi mode for qr codes</a>
 	</li>
+	<li>
+		<a href="/posts/20250719">2025-07-19 - BMI calculator</a>
+	</li>
 </ol>
