@@ -3,6 +3,7 @@
 	export let data;
 </script>
 
+<title>Posts</title>
 <h1>All Posts</h1>
 
 {#each data.posts as post}

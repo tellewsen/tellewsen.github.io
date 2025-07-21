@@ -1,3 +1,4 @@
+<title>Utilities</title>
 <h1>Utilities</h1>
 <menu>
 	<li>
