@@ -10,4 +10,7 @@
 	<li>
 		<a href="/utils/bmi">BMI calculator</a>
 	</li>
+	<li>
+		<a href="/utils/cidr">Ip range calculator</a>
+	</li>
 </menu>
