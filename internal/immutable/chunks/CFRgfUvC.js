@@ -1,0 +1,1 @@
+const e=()=>({metadata:{title:"Wifi mode for qr codes",date:"2025-07-17T19:45:00+02:00"}}),t=Object.freeze(Object.defineProperty({__proto__:null,load:e},Symbol.toStringTag,{value:"Module"}));export{t as _};
