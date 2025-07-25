@@ -7,4 +7,5 @@ import"../chunks/CWj6FrbW.js";import"../chunks/BDApSGBO.js";import{f as t,a}from
 			challenges into clean, functional software—whether that's backend architecture, API
 			integration, or full-stack development. My approach blends scientific thinking with practical
 			engineering, and I'm always looking for smart ways to make technology work better for people.</p> <p class="svelte-g8dg0v">When I'm not coding, you'll probably find me exploring new games or tinkering with personal
-			coding projects for fun.</p> <p class="disclaimer svelte-g8dg0v">Yes, all of that is a ChatGPT summary of me in a generic consultant summary.</p></div></main>`);function l(e){var n=o();a(e,n)}export{l as component};
+			coding projects for fun.</p> <p class="disclaimer svelte-g8dg0v">Yes, all of that is a ChatGPT summary of me in a generic consultant tone that may make you
+			nauseous.</p></div></main>`);function l(e){var n=o();a(e,n)}export{l as component};
