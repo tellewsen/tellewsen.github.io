@@ -1,0 +1,5 @@
+import{_ as B}from"../chunks/sUJFqb5S.js";import"../chunks/CWj6FrbW.js";import"../chunks/DUssHvsD.js";import{p as d,f as h,t as c,a as u,b as g,s as v,c as o,u as l,d as p,r as s,n as y}from"../chunks/C081ASDo.js";import{s as b}from"../chunks/uws82T9h.js";import{i as w}from"../chunks/DUH3tVvG.js";import{p as _}from"../chunks/DXKvucXa.js";import{T as x}from"../chunks/jbftDiuh.js";var T=h(`<article><h1> </h1> <small><!></small> <hr/> <p>The site got a few new utils today. Most of it is just thrown together by Copilot and ChatGPT to
+		get a better feel of what different models are capable of. They can at least do simple stuff,
+		but making it correct on the first attempt usually fails, and anything slightly complicated
+		rarely works well.</p> <p>I also updated the nav bar, making it its own component instead of just having a nav tag on the
+		layout page.</p></article>`);function q(n,r){d(r,!1);let t=_(r,"data",8);w();var a=T(),e=o(a),m=o(e,!0);s(e);var i=v(e,2),f=o(i);x(f,{get iso(){return p(t()),l(()=>t().metadata.date)}}),s(i),y(6),s(a),c(()=>b(m,(p(t()),l(()=>t().metadata.title)))),u(n,a),g()}export{q as component,B as universal};
