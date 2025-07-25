@@ -13,4 +13,13 @@
 	<li>
 		<a href="/utils/cidr">Ip range calculator</a>
 	</li>
+	<li>
+		<a href="/utils/uuid">UUID Generator (v4)</a>
+	</li>
+	<li>
+		<a href="/utils/b64">Base64 Encoder / Decoder</a>
+	</li>
+	<li>
+		<a href="/utils/jwt">JWT Decoder</a>
+	</li>
 </menu>

@@ -177,6 +177,9 @@
 	});
 </script>
 
+<title>BMI calculator</title>
+<h2>BMI calculator</h2>
+
 <div style="position: relative; width: 100%; max-width: 900px;">
 	<canvas bind:this={canvas}></canvas>
 	<div class="hover-box">

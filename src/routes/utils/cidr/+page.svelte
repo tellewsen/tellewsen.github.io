@@ -120,6 +120,7 @@
 	}
 </script>
 
+<title>IP Range Calculator (IPv4 & IPv6)</title>
 <h2>IP Range Calculator (IPv4 & IPv6)</h2>
 
 <label>

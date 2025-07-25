@@ -95,6 +95,7 @@
 </script>
 
 <div class="container">
+	<title>QR Code Generator</title>
 	<h1>QR Code Generator</h1>
 	<label>
 		<input type="checkbox" bind:checked={isWifiMode} />
