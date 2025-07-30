@@ -6,7 +6,6 @@
 	<a href="/" class:active={active === '/'}>Home</a>
 	<a href="/posts" class:active={active === '/posts'}>Posts</a>
 	<a href="/utils" class:active={active === '/utils'}>Utilities</a>
-	<a href="/about" class:active={active === '/about'}>About</a>
 </nav>
 
 <style>
