@@ -1,7 +1,7 @@
 <script lang="ts">
 	export let iso: string;
-	export let dateStyle = 'full';
-	export let timeStyle = 'short';
+	export let dateStyle: 'full' | 'long' | 'medium' | 'short' = 'full';
+	export let timeStyle: 'full' | 'long' | 'medium' | 'short' = 'short';
 	let local = '';
 
 	import { onMount } from 'svelte';
