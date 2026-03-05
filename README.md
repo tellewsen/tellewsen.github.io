@@ -1,38 +1,73 @@
-# sv
+# ellewsen.no
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Personal website. Built with SvelteKit, deployed to GitHub Pages via a custom domain.
 
-## Creating a project
+## Stack
 
-If you're seeing this, you've probably already done this step. Congrats!
+- [SvelteKit](https://kit.svelte.dev/) with `adapter-static` for full static prerendering
+- [Vite](https://vitejs.dev/)
+- TypeScript
+- Hosted on GitHub Pages at [ellewsen.no](https://ellewsen.no)
 
-```bash
-# create a new project in the current directory
-npx sv create
+## Project structure
 
-# create a new project in my-app
-npx sv create my-app
+```
+src/
+  app.html          # HTML shell, Google Fonts
+  app.css           # Global design system (CSS variables, shared classes)
+  lib/
+    Nav.svelte      # Site navigation
+    Timestamp.svelte
+    FnrGenerator.svelte
+  routes/
+    +layout.svelte  # Shell wrapper, footer
+    +page.svelte    # Homepage
+    posts/          # Blog posts (one directory per post, YYYYMMDD)
+    utils/          # Browser-based utility tools
 ```
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## Development
 
 ```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+pnpm install
+pnpm dev
 ```
 
-## Building
-
-To create a production version of your app:
+## Build & deploy
 
 ```bash
-npm run build
+pnpm build       # Output to /build
+pnpm preview     # Preview the build locally
+pnpm deploy      # Push /build to GitHub Pages
 ```
 
-You can preview the production build with `npm run preview`.
+## Adding a post
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+Create a new directory under `src/routes/posts/YYYYMMDD/` with two files:
+
+**`+page.js`** — metadata:
+```js
+export const load = () => ({
+  metadata: {
+    title: "Post title",
+    date: "2026-01-01T12:00:00+01:00",
+  }
+});
+```
+
+**`+page.svelte`** — content:
+```svelte
+<script>
+  import Timestamp from '$lib/Timestamp.svelte';
+  export let data;
+</script>
+
+<article>
+  <h1>{data.metadata.title}</h1>
+  <small><Timestamp iso={data.metadata.date} /></small>
+  <hr />
+  <p>...</p>
+</article>
+```
+
+The post index at `/posts` picks up new posts automatically via `import.meta.glob`.
