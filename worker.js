@@ -10,14 +10,14 @@
  *   3. Add a route: ellewsen.no/* → this worker
  */
 
-const RESET  = '\x1b[0m'
-const BOLD   = '\x1b[1m'
-const DIM    = '\x1b[2m'
-const GREEN  = '\x1b[38;5;114m'
+const RESET = '\x1b[0m'
+const BOLD = '\x1b[1m'
+const DIM = '\x1b[2m'
+const GREEN = '\x1b[38;5;114m'
 const YELLOW = '\x1b[38;5;221m'
-const BLUE   = '\x1b[38;5;110m'
-const GRAY   = '\x1b[38;5;245m'
-const WHITE  = '\x1b[97m'
+const BLUE = '\x1b[38;5;110m'
+const GRAY = '\x1b[38;5;245m'
+const WHITE = '\x1b[97m'
 
 const B = s => `${BOLD}${s}${RESET}`
 const G = s => `${GREEN}${s}${RESET}`
@@ -46,16 +46,6 @@ ${G('╚══════╝╚══════╝╚══════╝╚
 
   ${Y('interests')}  ${D('backend arch · API design · video games')}
             ${D('· occasionally gazing at stars')}
-
-  ${D('────────────────────────────────────────────')}
-
-  ${G('recent posts')}
-
-  ${W('2026-03-05')}  ${L('Rewriting the site with Claude')}
-  ${W('2025-07-25')}  ${L('More utils')}
-  ${W('2025-07-24')}  ${L('Ipv6 support for IP Range Calculator')}
-  ${W('2025-07-23')}  ${L('Ip Range Calculator')}
-  ${W('2025-07-19')}  ${L('BMI calculator')}
 
   ${D('────────────────────────────────────────────')}
 

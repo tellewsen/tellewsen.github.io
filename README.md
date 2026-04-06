@@ -38,8 +38,18 @@ pnpm dev
 ```bash
 pnpm build       # Output to /build
 pnpm preview     # Preview the build locally
-pnpm deploy      # Push /build to GitHub Pages
+pnpm deploy      # Push /build to GitHub Pages via gh-pages
 ```
+
+### GitHub Pages deployment
+
+The site is deployed to GitHub Pages using the `gh-pages` npm package. Running `pnpm deploy` will build and push the `/build` directory to the `gh-pages` branch on GitHub.
+
+### Cloudflare Worker for curl
+
+The site uses a Cloudflare Worker to serve a styled ASCII response when accessed via `curl`. See [cloudflare-setup.md](cloudflare-setup.md) for configuration details.
+
+**Note:** The Worker at `worker.js` does not include hardcoded posts — it will always direct users to visit https://ellewsen.no/posts for the latest posts.
 
 ## Adding a post
 

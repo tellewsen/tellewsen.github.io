@@ -1,5 +1,7 @@
 # Cloudflare Setup for curl ellewsen.no
 
+This worker serves a styled ASCII response when `curl ellewsen.no` is run. The worker code is stored in `worker.js` in the repository root and does not include hardcoded posts, so it doesn't need to be updated when new posts are published.
+
 ## 1. Move DNS to Cloudflare
 
 - Create a free account at cloudflare.com
