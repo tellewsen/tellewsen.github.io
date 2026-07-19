@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<link rel="icon" href="../favicon.svg" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+	<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;1,300&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+	
+		<link href="../internal/immutable/assets/0.C-WIcb4V.css" rel="stylesheet">
+		<link href="../internal/immutable/assets/22.Dbam52-4.css" rel="stylesheet">
+		<link rel="modulepreload" href="../internal/immutable/entry/start.DXTus2qi.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/DIEZutgi.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/BEZW9h5P.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/D6bRL-TY.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/Cx2z03q1.js">
+		<link rel="modulepreload" href="../internal/immutable/entry/app.CheGHm4a.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/Dp1pzeXC.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/Bzak7iHL.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/BnO6KuBQ.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/D28YVSOB.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/CHzqhxHe.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/yIO1Gesl.js">
+		<link rel="modulepreload" href="../internal/immutable/nodes/0.B2dJwdXS.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/R6XdicfM.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/BT4RLOqe.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/DZYI5s2v.js">
+		<link rel="modulepreload" href="../internal/immutable/nodes/22.FLqaOviG.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/D-m1H8E9.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/BEPWPw8T.js"><!--[--><!--]--><title>Yatzy solver — ellewsen.no</title>
+</head>
+
+<body data-sveltekit-preload-data="hover">
+	<div style="display: contents"><!--[--><!--[--><!----><div class="shell"><nav class="svelte-xl3gmk"><a href="/" class="nav-logo svelte-xl3gmk">ae<span class="svelte-xl3gmk">.</span></a> <ul class="nav-links svelte-xl3gmk"><li><a href="/" class="svelte-xl3gmk">~/home</a></li> <li><a href="/posts" class="svelte-xl3gmk">~/posts</a></li> <li><a href="/utils" class="svelte-xl3gmk active">~/utils</a></li></ul></nav><!----> <!----><!----><section class="yatzy svelte-u20vox"><div class="section-label svelte-u20vox">// utils / yatzy</div> <p class="intro svelte-u20vox">Optimal-play Yatzy assistant. Roll physical dice and enter the values below (click a die to
+		cycle 1–6, × to clear), or use "Roll remaining" to simulate a roll. Runs the same solver as my <a href="https://github.com/tellewsen/optimal-yatzy" class="svelte-u20vox">desktop app</a>, compiled to WebAssembly —
+		everything happens in your browser, nothing is sent anywhere.</p> <!--[!--><!--]--> <div class="card dice-card svelte-u20vox"><div class="dice-row svelte-u20vox"><!--[--><div class="die-wrapper svelte-u20vox"><button type="button" class="die svelte-u20vox die-empty"><!--[!--><!--]--></button> <!--[!--><!--]--></div><div class="die-wrapper svelte-u20vox"><button type="button" class="die svelte-u20vox die-empty"><!--[!--><!--]--></button> <!--[!--><!--]--></div><div class="die-wrapper svelte-u20vox"><button type="button" class="die svelte-u20vox die-empty"><!--[!--><!--]--></button> <!--[!--><!--]--></div><div class="die-wrapper svelte-u20vox"><button type="button" class="die svelte-u20vox die-empty"><!--[!--><!--]--></button> <!--[!--><!--]--></div><div class="die-wrapper svelte-u20vox"><button type="button" class="die svelte-u20vox die-empty"><!--[!--><!--]--></button> <!--[!--><!--]--></div><!--]--></div> <div class="dice-actions svelte-u20vox"><div class="reroll-dots svelte-u20vox" aria-label="Rerolls left: 2"><!--[--><span class="reroll-dot svelte-u20vox reroll-dot-filled"></span><span class="reroll-dot svelte-u20vox reroll-dot-filled"></span><!--]--></div> <button type="button" class="btn btn-secondary svelte-u20vox">Roll remaining</button> <button type="button" class="btn btn-secondary svelte-u20vox" disabled>Reroll</button> <button type="button" class="btn btn-secondary svelte-u20vox">New game</button></div></div> <div class="card recommendation-card svelte-u20vox"><!--[!--><!--[!--><!--[--><p class="hint svelte-u20vox">Enter all five dice to see recommendations.</p><!--]--><!--]--><!--]--></div> <div class="card scorecard-card svelte-u20vox"><div class="section-label svelte-u20vox">// scorecard</div> <!--[--><div class="score-row svelte-u20vox"><span class="svelte-u20vox">Ones</span> <span class="svelte-u20vox">—</span></div><div class="score-row svelte-u20vox"><span class="svelte-u20vox">Twos</span> <span class="svelte-u20vox">—</span></div><div class="score-row svelte-u20vox"><span class="svelte-u20vox">Threes</span> <span class="svelte-u20vox">—</span></div><div class="score-row svelte-u20vox"><span class="svelte-u20vox">Fours</span> <span class="svelte-u20vox">—</span></div><div class="score-row svelte-u20vox"><span class="svelte-u20vox">Fives</span> <span class="svelte-u20vox">—</span></div><div class="score-row svelte-u20vox"><span class="svelte-u20vox">Sixes</span> <span class="svelte-u20vox">—</span></div><div class="score-row svelte-u20vox"><span class="svelte-u20vox">One Pair</span> <span class="svelte-u20vox">—</span></div><div class="score-row svelte-u20vox"><span class="svelte-u20vox">Two Pairs</span> <span class="svelte-u20vox">—</span></div><div class="score-row svelte-u20vox"><span class="svelte-u20vox">Three of a Kind</span> <span class="svelte-u20vox">—</span></div><div class="score-row svelte-u20vox"><span class="svelte-u20vox">Four of a Kind</span> <span class="svelte-u20vox">—</span></div><div class="score-row svelte-u20vox"><span class="svelte-u20vox">Small Straight</span> <span class="svelte-u20vox">—</span></div><div class="score-row svelte-u20vox"><span class="svelte-u20vox">Large Straight</span> <span class="svelte-u20vox">—</span></div><div class="score-row svelte-u20vox"><span class="svelte-u20vox">Full House</span> <span class="svelte-u20vox">—</span></div><div class="score-row svelte-u20vox"><span class="svelte-u20vox">Chance</span> <span class="svelte-u20vox">—</span></div><div class="score-row svelte-u20vox"><span class="svelte-u20vox">Yatzy</span> <span class="svelte-u20vox">—</span></div><!--]--> <div class="score-row total-row svelte-u20vox"><strong class="svelte-u20vox">Upper total</strong> <span class="svelte-u20vox">0 (0/63 for bonus)</span></div> <div class="score-row total-row svelte-u20vox"><strong class="svelte-u20vox">Grand total</strong> <span class="svelte-u20vox">0</span></div></div></section><!----><!----> <footer class="svelte-61uftz"><div class="footer-left svelte-61uftz"><span class="svelte-61uftz">ellewsen.no</span> — built for speed, not spectacle</div> <div class="footer-links svelte-61uftz"><a href="/posts" class="svelte-61uftz">posts</a> <a href="/utils" class="svelte-61uftz">utils</a></div></footer></div><!----><!--]--> <!--[!--><!--]--><!--]-->
+			
+			<script>
+				{
+					__sveltekit_1yirjxu = {
+						base: new URL("..", location).pathname.slice(0, -1)
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("../internal/immutable/entry/start.DXTus2qi.js"),
+						import("../internal/immutable/entry/app.CheGHm4a.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 22],
+							data: [{type:"data",data:null,uses:{}},null],
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+</body>
+
+</html>
