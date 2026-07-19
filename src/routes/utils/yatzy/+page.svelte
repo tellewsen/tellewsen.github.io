@@ -12,6 +12,7 @@
 		applyHold,
 		rollRemaining,
 		scoreCategory,
+		setCategoryScore,
 		allDiceValid,
 		isGameComplete,
 		totalScore,
@@ -19,6 +20,7 @@
 		CATEGORY_NAMES,
 		NUM_CATEGORIES
 	} from '$lib/yatzy/state';
+	import { isValidScore } from '$lib/yatzy/scoreValidation';
 	import { getRecommendation } from '$lib/yatzy/wasmEngine';
 	import type { QueryResult } from '$lib/yatzy/parseResult';
 
@@ -30,6 +32,11 @@
 		5: ['tl', 'tr', 'mc', 'bl', 'br'],
 		6: ['tl', 'ml', 'bl', 'tr', 'mr', 'br']
 	};
+
+	function focusOnMount(node: HTMLInputElement) {
+		node.focus();
+		node.select();
+	}
 
 	let match: MatchState = initialMatchState('solo');
 	let lastResult: QueryResult | null = null;
@@ -134,6 +141,50 @@
 		setMatch(initialMatchState('solo'));
 		lastResult = null;
 		errorMessage = null;
+	}
+
+	let editingCategory: number | null = null;
+	let editingValue = '';
+	let editingError: string | null = null;
+
+	function startEditingCategory(category: number) {
+		editingCategory = category;
+		const current = active.categoryScores[category];
+		editingValue = current === null ? '' : String(current);
+		editingError = null;
+	}
+
+	function cancelEditingCategory() {
+		editingCategory = null;
+		editingValue = '';
+		editingError = null;
+	}
+
+	function commitEditingCategory() {
+		if (editingCategory === null) return;
+		const category = editingCategory;
+		const trimmed = editingValue.trim();
+		if (trimmed === '') {
+			const state = activeGameState(match);
+			setMatch(withActiveGameState(match, setCategoryScore(state, category, null)));
+			cancelEditingCategory();
+			if (allDiceValid(activeGameState(match).dice)) void maybeQuery();
+			return;
+		}
+		const parsed = Number(trimmed);
+		if (!isValidScore(category, parsed)) {
+			editingError = `Not a valid score for ${CATEGORY_NAMES[category]}`;
+			return;
+		}
+		const state = activeGameState(match);
+		setMatch(withActiveGameState(match, setCategoryScore(state, category, parsed)));
+		cancelEditingCategory();
+		if (allDiceValid(activeGameState(match).dice)) void maybeQuery();
+	}
+
+	function handleEditingKeydown(event: KeyboardEvent) {
+		if (event.key === 'Enter') commitEditingCategory();
+		else if (event.key === 'Escape') cancelEditingCategory();
 	}
 </script>
 
@@ -247,9 +298,30 @@
 	<div class="card scorecard-card">
 		<div class="section-label">// scorecard</div>
 		{#each Array(NUM_CATEGORIES) as _, cat (cat)}
-			<div class="score-row">
+			<div class="score-row score-row-editable">
 				<span>{CATEGORY_NAMES[cat]}</span>
-				<span>{active.categoryScores[cat] === null ? '—' : active.categoryScores[cat]}</span>
+				{#if editingCategory === cat}
+					<span class="score-edit-wrapper">
+						<input
+							class="score-edit-input"
+							type="text"
+							inputmode="numeric"
+							bind:value={editingValue}
+							on:keydown={handleEditingKeydown}
+							on:blur={commitEditingCategory}
+							use:focusOnMount
+						/>
+						{#if editingError}<span class="score-edit-error">{editingError}</span>{/if}
+					</span>
+				{:else}
+					<button
+						type="button"
+						class="score-value-button"
+						on:click={() => startEditingCategory(cat)}
+					>
+						{active.categoryScores[cat] === null ? '—' : active.categoryScores[cat]}
+					</button>
+				{/if}
 			</div>
 		{/each}
 		<div class="score-row total-row">
@@ -461,5 +533,42 @@
 		border-top: 1px solid var(--border);
 		margin-top: 6px;
 		padding-top: 6px;
+	}
+
+	.score-row-editable {
+		align-items: center;
+	}
+
+	.score-value-button {
+		background: transparent;
+		border: 1px solid transparent;
+		border-radius: 4px;
+		color: inherit;
+		font-family: inherit;
+		font-size: 13px;
+		padding: 2px 8px;
+		cursor: pointer;
+	}
+
+	.score-value-button:hover {
+		border-color: var(--border);
+		background: var(--bg2);
+	}
+
+	.score-edit-wrapper {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.score-edit-input {
+		width: 64px;
+		font-size: 13px;
+		padding: 2px 6px;
+	}
+
+	.score-edit-error {
+		font-size: 11px;
+		color: var(--accent3);
 	}
 </style>

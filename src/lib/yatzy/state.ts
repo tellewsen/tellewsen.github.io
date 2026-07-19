@@ -86,6 +86,21 @@ export function scoreCategory(state: GameState, category: number, resultingScore
   };
 }
 
+export function setCategoryScore(state: GameState, category: number, score: number | null): GameState {
+  const categoryScores = [...state.categoryScores];
+  categoryScores[category] = score;
+  let usedMask = 0;
+  let upperTotal = 0;
+  for (let cat = 0; cat < NUM_CATEGORIES; cat++) {
+    const s = categoryScores[cat];
+    if (s !== null) {
+      usedMask |= (1 << cat);
+      if (cat < UPPER_CATEGORY_COUNT) upperTotal += s;
+    }
+  }
+  return { ...state, categoryScores, usedMask, upperTotal };
+}
+
 export function bonusEarned(state: GameState): boolean {
   return state.upperTotal >= BONUS_THRESHOLD;
 }
