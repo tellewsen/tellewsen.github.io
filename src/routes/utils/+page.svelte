@@ -33,6 +33,10 @@
 			<div class="util-name">jwt</div>
 			<div class="util-desc">JWT decoder</div>
 		</a>
+		<a href="/utils/yatzy" class="card util-card">
+			<div class="util-name">yatzy</div>
+			<div class="util-desc">Optimal-play Yatzy solver (WASM)</div>
+		</a>
 	</div>
 </section>
 

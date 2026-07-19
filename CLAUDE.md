@@ -24,6 +24,7 @@ This is a **SvelteKit static site** (adapter-static) deployed to GitHub Pages at
 - `src/routes/+page.svelte` — home page
 - `src/routes/posts/` — blog section; `+page.ts` auto-discovers all post subdirectories
 - `src/routes/utils/` — small browser-based utility tools (b64, bmi, cidr, fnr, jwt, qr, uuid)
+- `src/routes/utils/yatzy/` — optimal-play Yatzy solver. Vendored (copied, not shared via package) from `optimal-yatzy/gui/src/` — pure game-state/match logic plus a WASM build of the C++ solver engine, baked with a pre-solved DP table. Solo mode only. Re-copy `src/lib/yatzy/` manually if the source engine or logic changes; there's no automated sync.
 - `src/routes/about/` — empty directory (about page not yet created)
 
 ### Blog post pattern
