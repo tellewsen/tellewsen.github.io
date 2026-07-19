@@ -18,7 +18,8 @@
 		totalScore,
 		bonusEarned,
 		CATEGORY_NAMES,
-		NUM_CATEGORIES
+		NUM_CATEGORIES,
+		UPPER_CATEGORY_COUNT
 	} from '$lib/yatzy/state';
 	import { isValidScore } from '$lib/yatzy/scoreValidation';
 	import { getRecommendation } from '$lib/yatzy/wasmEngine';
@@ -295,34 +296,34 @@
 		{/if}
 	</div>
 
+	{#snippet scoreRow(cat: number)}
+		<div class="score-row score-row-editable">
+			<span>{CATEGORY_NAMES[cat]}</span>
+			{#if editingCategory === cat}
+				<span class="score-edit-wrapper">
+					<input
+						class="score-edit-input"
+						type="text"
+						inputmode="numeric"
+						bind:value={editingValue}
+						on:keydown={handleEditingKeydown}
+						on:blur={commitEditingCategory}
+						use:focusOnMount
+					/>
+					{#if editingError}<span class="score-edit-error">{editingError}</span>{/if}
+				</span>
+			{:else}
+				<button type="button" class="score-value-button" on:click={() => startEditingCategory(cat)}>
+					{active.categoryScores[cat] === null ? '—' : active.categoryScores[cat]}
+				</button>
+			{/if}
+		</div>
+	{/snippet}
+
 	<div class="card scorecard-card">
 		<div class="section-label">// scorecard</div>
-		{#each Array(NUM_CATEGORIES) as _, cat (cat)}
-			<div class="score-row score-row-editable">
-				<span>{CATEGORY_NAMES[cat]}</span>
-				{#if editingCategory === cat}
-					<span class="score-edit-wrapper">
-						<input
-							class="score-edit-input"
-							type="text"
-							inputmode="numeric"
-							bind:value={editingValue}
-							on:keydown={handleEditingKeydown}
-							on:blur={commitEditingCategory}
-							use:focusOnMount
-						/>
-						{#if editingError}<span class="score-edit-error">{editingError}</span>{/if}
-					</span>
-				{:else}
-					<button
-						type="button"
-						class="score-value-button"
-						on:click={() => startEditingCategory(cat)}
-					>
-						{active.categoryScores[cat] === null ? '—' : active.categoryScores[cat]}
-					</button>
-				{/if}
-			</div>
+		{#each Array(UPPER_CATEGORY_COUNT) as _, cat (cat)}
+			{@render scoreRow(cat)}
 		{/each}
 		<div class="score-row total-row">
 			<strong>Upper total</strong>
@@ -332,6 +333,9 @@
 					: `${active.upperTotal}/63 for bonus`})</span
 			>
 		</div>
+		{#each Array(NUM_CATEGORIES - UPPER_CATEGORY_COUNT) as _, i (i + UPPER_CATEGORY_COUNT)}
+			{@render scoreRow(i + UPPER_CATEGORY_COUNT)}
+		{/each}
 		<div class="score-row total-row">
 			<strong>Grand total</strong>
 			<span>{totalScore(active)}</span>
