@@ -7,6 +7,8 @@
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
+		"test": "vitest run",
+		"test:watch": "vitest",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
@@ -17,13 +19,17 @@
 		"@sveltejs/adapter-static": "^3.0.8",
 		"@sveltejs/kit": "^2.25.1",
 		"@sveltejs/vite-plugin-svelte": "^5.1.1",
+		"@testing-library/jest-dom": "^7.0.0",
+		"@testing-library/svelte": "^5.4.2",
 		"@types/qrcode": "^1.5.5",
 		"gh-pages": "^6.3.0",
+		"jsdom": "^29.1.1",
 		"svelte": "^5.36.12",
 		"svelte-check": "^4.3.0",
 		"svelte-preprocess": "^6.0.3",
 		"typescript": "^5.8.3",
-		"vite": "^6.3.5"
+		"vite": "^6.3.5",
+		"vitest": "^4.1.10"
 	},
 	"dependencies": {
 		"moment": "^2.30.1",
