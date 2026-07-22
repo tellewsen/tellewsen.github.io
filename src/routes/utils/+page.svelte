@@ -37,6 +37,10 @@
 			<div class="util-name">yatzy</div>
 			<div class="util-desc">Optimal-play Yatzy solver (WASM)</div>
 		</a>
+		<a href="/utils/tenk" class="card util-card">
+			<div class="util-name">tenk</div>
+			<div class="util-desc">Optimal-play "10,000" dice game assistant</div>
+		</a>
 	</div>
 </section>
 
@@ -70,7 +74,7 @@
 	}
 
 	.util-card:hover .util-name {
-		text-shadow: 0 0 8px rgba(57,211,83,0.4);
+		text-shadow: 0 0 8px rgba(57, 211, 83, 0.4);
 	}
 
 	.util-desc {

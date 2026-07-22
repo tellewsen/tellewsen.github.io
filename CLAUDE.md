@@ -10,9 +10,13 @@ pnpm build        # Build static site to /build
 pnpm preview      # Preview production build
 pnpm check        # Run svelte-check (TypeScript + Svelte type checking)
 pnpm deploy       # Deploy /build to GitHub Pages via gh-pages
+pnpm test          # Run the test suite once
+pnpm test:watch    # Run tests in watch mode
 ```
 
-No test suite exists in this project.
+Test suite: Vitest, covering src/lib/tenk/ (pure logic — solver golden
+values, state transitions, recommendations) and one component test file
+for /utils/tenk. No tests exist yet for other routes/components.
 
 ## Architecture
 
@@ -25,6 +29,12 @@ This is a **SvelteKit static site** (adapter-static) deployed to GitHub Pages at
 - `src/routes/posts/` — blog section; `+page.ts` auto-discovers all post subdirectories
 - `src/routes/utils/` — small browser-based utility tools (b64, bmi, cidr, fnr, jwt, qr, uuid)
 - `src/routes/utils/yatzy/` — optimal-play Yatzy solver. Vendored (copied, not shared via package) from `optimal-yatzy/gui/src/` — pure game-state/match logic plus a WASM build of the C++ solver engine, baked with a pre-solved DP table. Solo mode only. Re-copy `src/lib/yatzy/` manually if the source engine or logic changes; there's no automated sync.
+- `src/routes/utils/tenk/` — optimal-play "10,000" (Terning 10 000 / Cows)
+  solver. Unlike yatzy, this is a native TypeScript port (see
+  `src/lib/tenk/`) solved live in-browser — no WASM/precompute, since the
+  state space is small enough to solve in milliseconds. Ported from
+  `tenk-solver` (sibling repo); if its Go rules ever change, this needs
+  manual re-porting, same as yatzy's vendoring note above.
 - `src/routes/about/` — empty directory (about page not yet created)
 
 ### Blog post pattern
