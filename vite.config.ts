@@ -6,7 +6,7 @@ export default defineConfig({
 	resolve: process.env.VITEST ? { conditions: ['browser'] } : undefined,
 	test: {
 		environment: 'node',
-		setupFiles: ['./vitest-setup.ts'],
+		setupFiles: ['./src/vitest-setup.ts'],
 		passWithNoTests: true
 	}
 });
