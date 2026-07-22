@@ -14,6 +14,11 @@ pnpm test          # Run the test suite once
 pnpm test:watch    # Run tests in watch mode
 ```
 
+**Deploying:** `pnpm deploy` ships whatever is *currently on disk* in `/build`
+— it does not rebuild first. Always run `pnpm build` immediately before
+`pnpm deploy`, or a stale/incomplete local `build/` gets silently published
+(e.g. missing new routes).
+
 Test suite: Vitest, covering src/lib/tenk/ (pure logic — solver golden
 values, state transitions, recommendations) and one component test file
 for /utils/tenk. No tests exist yet for other routes/components.
