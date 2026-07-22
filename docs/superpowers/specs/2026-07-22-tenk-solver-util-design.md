@@ -161,19 +161,36 @@ function getRecommendation(state: GameState, roll: number[]): RecommendationResu
 
 ## Verification
 
-This repo has no test suite by existing convention (`CLAUDE.md`: "No test
-suite exists in this project"), so no automated test file is added. Instead,
-verification is a manual cross-check during implementation: run the actual
-`tenk-solver` Go binaries (`basic/main.go`, `houserule/main.go`) to get
-reference numbers — bust probabilities per `n`, bank thresholds per `n`, a
-handful of EVs, and the house-rule sanity-check cases already hardcoded in
-`houserule/main.go`'s `sanityCheck()` (e.g. one-kept-1 + two-more-1s combining
-to a 1000-point triple, double-triple scoring `(triple1+triple2)*2`) — and
-confirm the TS port produces matching numbers before considering the port
-done. Also manually verified: bust forfeits the whole turn correctly, hot
-dice resets without ending the turn, on-the-board threshold gates the first
-banked turn only, ruleset toggle correctly resets incompatible mid-turn
-state, opponents panel doesn't affect recommendations.
+This repo previously had no test suite (`CLAUDE.md`: "No test suite exists in
+this project") — that changes with this feature. We're introducing **Vitest**
+as the test runner (standard fit for a Vite/SvelteKit project, no extra
+config beyond a `vite.config.ts` test block and a `pnpm test` script), scoped
+for now to this feature's code. `CLAUDE.md`'s Commands section and the "No
+test suite exists" line get updated to reflect this once the suite exists.
+
+Test coverage:
+
+- **Golden-value regression tests** (`src/lib/tenk/solverBasic.test.ts`,
+  `solverHouserule.test.ts`): reference numbers captured by running the
+  actual `tenk-solver` Go binaries once during implementation — bust
+  probabilities per `n`, bank thresholds per `n`, a handful of EVs, and the
+  house-rule sanity-check cases already hardcoded in `houserule/main.go`'s
+  `sanityCheck()` (e.g. one-kept-1 + two-more-1s combining to a 1000-point
+  triple, double-triple scoring `(triple1+triple2)*2`) — hardcoded as
+  expected values and asserted against the TS port. These are permanent
+  regression tests, not a one-off manual check.
+- **Unit tests** for the other pure modules (`scoring.ts`, `state.ts`,
+  `match.ts`, `recommend.ts`): turn-flow transitions (bust forfeits the whole
+  turn, hot dice resets without ending the turn, on-the-board threshold gates
+  only the first banked turn, ruleset switch resets incompatible mid-turn
+  state), and `recommend.ts`'s option-ranking/forced-decision output for a
+  handful of representative rolls in both rulesets.
+- **Component tests** for `src/routes/utils/tenk/+page.svelte` using
+  `@testing-library/svelte` (new dev dependency, same as would be needed for
+  any Svelte component testing): dice click-to-cycle, ruleset toggle resets
+  in-progress turn, opponents panel add/edit/remove doesn't affect
+  recommendations, recommendation cards render and apply the right state
+  change on click.
 
 ## Out of scope (for this iteration)
 
