@@ -28,6 +28,11 @@ function thresholdFor(state: GameState): number {
 	return state.onBoard ? 0 : ENTRY_THRESHOLD;
 }
 
+function applyStop(bankedState: GameState, threshold: number): GameState {
+	if (bankedState.turnScore >= threshold) return stopTurn(bankedState);
+	return applyBust(bankedState);
+}
+
 export interface BasicBankOption {
 	banked: number[];
 	points: number;
@@ -61,7 +66,8 @@ function forced(
 	diceUsed: number,
 	bankedState: GameState,
 	stopEV: number,
-	rerollEV: number
+	rerollEV: number,
+	threshold: number
 ): HouseruleForced {
 	return {
 		kind: 'houseruleForced',
@@ -70,7 +76,7 @@ function forced(
 		stopEV,
 		rerollEV,
 		recommend: stopEV >= rerollEV ? 'stop' : 'reroll',
-		onStop: stopTurn(bankedState),
+		onStop: applyStop(bankedState, threshold),
 		onReroll: bankedState
 	};
 }
@@ -101,7 +107,7 @@ export function getRollAdvice(state: GameState, roll: number[]): RollAdvice {
 				rerollEV: rerollVal,
 				recommend: bankVal >= rerollVal ? 'stop' : 'reroll',
 				expectedValue: Math.max(bankVal, rerollVal),
-				onStop: stopTurn(bankedState),
+				onStop: applyStop(bankedState, threshold),
 				onReroll: bankedState
 			});
 		}
@@ -119,7 +125,7 @@ export function getRollAdvice(state: GameState, roll: number[]): RollAdvice {
 		if (d.used === 6) {
 			const bankedState = applyBank(state, d.points, 6);
 			const { bankVal, rerollVal } = decisionComponentsA(aUnits + d.points / 50, threshold);
-			return forced(d.points, 6, bankedState, bankVal, rerollVal);
+			return forced(d.points, 6, bankedState, bankVal, rerollVal, threshold);
 		}
 
 		const n1 = 6 - d.used;
@@ -131,7 +137,10 @@ export function getRollAdvice(state: GameState, roll: number[]): RollAdvice {
 			stopEV: bankVal,
 			rerollEV: rerollVal,
 			recommend: bankVal >= rerollVal ? 'stop' : 'reroll',
-			onStop: stopMidCombining(state, d.points),
+			onStop:
+				state.turnScore + d.points >= threshold
+					? stopMidCombining(state, d.points)
+					: applyBust(state),
 			onReroll: enterCombiningWindow(state, d.banked, d.used)
 		};
 	}
@@ -149,7 +158,7 @@ export function getRollAdvice(state: GameState, roll: number[]): RollAdvice {
 			d.used === 6
 				? decisionComponentsA(newAUnits, threshold)
 				: decisionComponentsC(6 - d.used, newAUnits, threshold);
-		return forced(d.points, d.used, bankedState, bankVal, rerollVal);
+		return forced(d.points, d.used, bankedState, bankVal, rerollVal, threshold);
 	}
 
 	// independent phase (throw 3+)
@@ -161,5 +170,5 @@ export function getRollAdvice(state: GameState, roll: number[]): RollAdvice {
 		d.used === state.diceRemaining
 			? decisionComponentsA(newAUnits, threshold)
 			: decisionComponentsC(state.diceRemaining - d.used, newAUnits, threshold);
-	return forced(d.points, d.used, bankedState, bankVal, rerollVal);
+	return forced(d.points, d.used, bankedState, bankVal, rerollVal, threshold);
 }

@@ -24,7 +24,7 @@
 	let currentRoll: (number | null)[] = Array(6).fill(null);
 
 	function setRuleset(ruleset: Ruleset) {
-		match = initialMatchState(ruleset);
+		match = { ...initialMatchState(ruleset), opponents: match.opponents };
 		resetRollInput();
 	}
 

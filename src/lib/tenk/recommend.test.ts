@@ -62,3 +62,30 @@ describe('getRollAdvice — house rule ruleset', () => {
 		expect(second.kind).toBe('bust');
 	});
 });
+
+describe('getRollAdvice — entry threshold enforced on stop', () => {
+	it('basic ruleset: stopping below 1000 while not on board scores zero, not the turn total', () => {
+		const state = { ...initialGameState('basic'), onBoard: false };
+		const advice = getRollAdvice(state, [1, 2, 3, 4, 6, 6]);
+		if (advice.kind !== 'basicOptions') throw new Error('expected basicOptions');
+		const only = advice.options[0];
+		expect(only.points).toBe(100);
+		// Below the 1000 entry threshold: stopping must forfeit the turn, not
+		// credit totalScore with the sub-threshold turnScore.
+		expect(only.onStop.totalScore).toBe(0);
+		expect(only.onStop.turnScore).toBe(0);
+		expect(only.onStop.onBoard).toBe(false);
+	});
+
+	it('house rule (fresh-phase, combining-window entry): stopping below 1000 while not on board scores zero', () => {
+		const state = { ...initialGameState('houserule'), onBoard: false };
+		const advice = getRollAdvice(state, [1, 2, 3, 4, 6, 6]);
+		if (advice.kind !== 'houseruleForced') throw new Error('expected houseruleForced');
+		expect(advice.points).toBe(100);
+		// Below the 1000 entry threshold: stopping must forfeit the turn, not
+		// credit totalScore with the sub-threshold turnScore.
+		expect(advice.onStop.totalScore).toBe(0);
+		expect(advice.onStop.turnScore).toBe(0);
+		expect(advice.onStop.onBoard).toBe(false);
+	});
+});
