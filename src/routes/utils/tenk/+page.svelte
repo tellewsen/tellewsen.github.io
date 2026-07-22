@@ -32,6 +32,14 @@
 		return roll.slice(0, n).every((d) => d !== null);
 	}
 
+	function expandCounts(counts: number[]): number[] {
+		const faces: number[] = [];
+		counts.forEach((count, idx) => {
+			for (let i = 0; i < count; i++) faces.push(idx + 1);
+		});
+		return faces;
+	}
+
 	function maybeAdvise() {
 		const n = match.self.diceRemaining;
 		if (!allDiceEntered(currentRoll, n)) {
@@ -137,6 +145,77 @@
 			on:click={() => setRuleset('houserule')}>House rule</button
 		>
 	</div>
+
+	<div class="card rules-card">
+		<details open>
+			<summary>How to play — {match.self.ruleset === 'basic' ? 'Basic' : 'House rule'}</summary>
+			{#if match.self.ruleset === 'basic'}
+				<ul class="rules-list">
+					<li>Roll all 6 dice. A single 1 scores 100 pts, a single 5 scores 50 pts.</li>
+					<li>
+						Three of a kind: three 1s = 1000 pts, otherwise value × 100. Four, five, or six of a
+						kind doubles the value again for each extra die beyond three.
+					</li>
+					<li>
+						Three pairs = 1500 pts. A straight (1-2-3-4-5-6) = 2000 pts — both need a genuine fresh
+						6-dice roll.
+					</li>
+					<li>
+						Each throw, choose which scoring dice to bank — you can leave some unbanked and reroll
+						them chasing a bigger combo.
+					</li>
+					<li>After banking, either stop (keep your turn total) or reroll the remaining dice.</li>
+					<li>
+						If a reroll scores nothing, you bust — the whole turn's points are lost, not just that
+						throw.
+					</li>
+					<li>
+						Bank all 6 dice in one turn ("hot dice") and you get to roll all 6 fresh again, keeping
+						the points you've banked so far.
+					</li>
+					<li>
+						You need 1000+ points in a single turn to get "on the board" the first time. After that,
+						any turn total counts.
+					</li>
+				</ul>
+			{:else}
+				<ul class="rules-list">
+					<li>
+						Roll all 6 dice. Every scoring die must be banked each throw — you can't choose to leave
+						points behind to chase a bigger combo.
+					</li>
+					<li>
+						Same scoring as basic: single 1 = 100, single 5 = 50, three of a kind = value × 100
+						(three 1s = 1000, doubling again per extra die), three pairs = 1500, straight = 2000.
+						Two different three-of-a-kinds in one roll (e.g. three 2s + three 5s) score as both
+						totals added together, then doubled.
+					</li>
+					<li>
+						Throw 1's kept dice can combine with throw 2: reroll the leftover dice, and the two
+						throws are re-scored together as one set — e.g. one kept 1 plus two more 1s on throw 2
+						scores as a triple (1000 pts), not 100 + 200.
+					</li>
+					<li>From throw 3 onward, no more combining — each throw scores entirely on its own.</li>
+					<li>Same bust, hot dice, and 1000-to-get-on-the-board rules as basic.</li>
+				</ul>
+			{/if}
+		</details>
+	</div>
+
+	{#if match.self.cyclePhase === 'combining' && match.self.keptForCombining}
+		<div class="card kept-dice-card">
+			<div class="kept-label">Kept from throw 1 — combines with this roll:</div>
+			<div class="dice-row">
+				{#each expandCounts(match.self.keptForCombining) as face, i (i)}
+					<div class="die die-kept" aria-label={`Kept die, value ${face}`}>
+						{#each PIP_LAYOUTS[face] as pos}
+							<span class="pip pip-{pos}"></span>
+						{/each}
+					</div>
+				{/each}
+			</div>
+		</div>
+	{/if}
 
 	<div class="card dice-card">
 		<div class="dice-row">
@@ -311,6 +390,45 @@
 	.btn-active {
 		border-color: var(--accent);
 		color: var(--accent);
+	}
+	.rules-card summary {
+		cursor: pointer;
+		font-size: 13px;
+		font-weight: 600;
+		color: var(--bright);
+	}
+	.rules-list {
+		margin: 10px 0 0;
+		padding-left: 18px;
+		font-size: 13px;
+		color: var(--muted);
+		line-height: 1.5;
+	}
+	.rules-list li {
+		margin-bottom: 6px;
+	}
+	.kept-dice-card {
+		background: var(--bg2);
+	}
+	.kept-label {
+		font-size: 12px;
+		color: var(--muted);
+		margin-bottom: 8px;
+	}
+	.die-kept {
+		width: 48px;
+		height: 48px;
+		border-radius: 8px;
+		background: var(--bg);
+		border: 2px solid var(--border);
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		grid-template-rows: repeat(3, 1fr);
+		padding: 6px;
+		opacity: 0.7;
+	}
+	.die-kept .pip {
+		background: var(--muted);
 	}
 	.dice-row {
 		display: flex;
