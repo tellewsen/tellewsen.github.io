@@ -1,4 +1,10 @@
-// Kociemba's two-phase algorithm.
+// Herbert Kociemba's two-phase algorithm (1992). The algorithm, and the
+// coordinates and conventions used here and in cubie.ts / coord.ts, are his
+// (overview: https://en.wikipedia.org/wiki/Optimal_solutions_for_the_Rubik%27s_Cube#Kociemba's_algorithm;
+// his reference solver: https://github.com/hkociemba/RubiksCube-TwophaseSolver).
+// This is a TypeScript implementation written from his published
+// description, not a port of his code; the center-orientation option is our
+// own extension.
 //
 // Phase 1 searches for a move sequence that reaches the subgroup
 // H = <U, D, R2, L2, F2, B2>; phase 2 then solves the cube using only moves

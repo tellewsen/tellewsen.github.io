@@ -1,6 +1,6 @@
-// Coordinates for Kociemba's two-phase algorithm: each squeezes one aspect
-// of a CubieCube into a small integer, so moves and distance estimates can
-// be looked up in tables instead of recomputed.
+// Coordinates for Kociemba's two-phase algorithm (see solver.ts for credit):
+// each squeezes one aspect of a CubieCube into a small integer, so moves and
+// distance estimates can be looked up in tables instead of recomputed.
 //
 // Phase 1 brings the cube into the subgroup H = <U, D, R2, L2, F2, B2>:
 //   twist  (0..2186)  corner orientations

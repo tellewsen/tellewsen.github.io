@@ -3,9 +3,12 @@
 // same model serves any shape mod of the 3x3 (e.g. the Mastermorphix) —
 // only the facelet/input layer differs.
 //
-// Conventions follow Kociemba: a cube is described by "piece in slot i is
-// cp[i]" (replaced-by representation), and a move is itself a cube that is
-// multiplied on the right.
+// Conventions follow Herbert Kociemba (his reference solver:
+// https://github.com/hkociemba/RubiksCube-TwophaseSolver):
+// the slot names and numbering, and a cube described by "piece in slot i is
+// cp[i]" (replaced-by representation), with a move being itself a cube that
+// is multiplied on the right. Written from those conventions, not copied
+// from his code.
 
 // Faces, in the order used everywhere (move names, facelet blocks, colours).
 export const FACES = ['U', 'R', 'F', 'D', 'L', 'B'] as const;

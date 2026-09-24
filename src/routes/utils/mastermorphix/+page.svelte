@@ -145,14 +145,14 @@
 </script>
 
 <svelte:head>
-	<title>Mastermorphix solver — ellewsen.no</title>
+	<title>Master Pyramorphix solver — ellewsen.no</title>
 </svelte:head>
 
 <section class="morphix-page">
 	<div class="section-label">// utils / mastermorphix</div>
 
 	<p class="intro">
-		Mastermorphix solver. It turns like a 3x3 <a href="/utils/cube">Rubik's cube</a>, just with a
+		Master Pyramorphix (Mastermorphix) solver. It turns like a 3x3 <a href="/utils/cube">Rubik's cube</a>, just with a
 		different shape. Hold yours with the <strong>{centerName(0)}</strong> edge on top and the
 		<strong>{centerName(2)}</strong> edge facing you. The two-colour edges never leave their place,
 		they only rotate, so this fixes which way is which.

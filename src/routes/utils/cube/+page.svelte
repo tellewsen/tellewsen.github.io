@@ -112,7 +112,7 @@
 		Rubik's cube (3x3) solver. Hold your cube with the <strong>white</strong> center on top and the
 		<strong>green</strong> center facing you, then paint the stickers to match: pick a colour and click
 		stickers. Drag the cube to see the other sides. Runs entirely in your browser. Got a
-		<a href="/utils/mastermorphix">Mastermorphix</a>? It has its own solver.
+		<a href="/utils/mastermorphix">Master Pyramorphix</a>? It has its own solver.
 	</p>
 
 	<div class="card palette-card">
