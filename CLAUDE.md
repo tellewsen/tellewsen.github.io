@@ -9,15 +9,18 @@ pnpm dev          # Start dev server
 pnpm build        # Build static site to /build
 pnpm preview      # Preview production build
 pnpm check        # Run svelte-check (TypeScript + Svelte type checking)
-pnpm deploy       # Deploy /build to GitHub Pages via gh-pages
+pnpm deploy       # verify + build, then publish /build to GitHub Pages via gh-pages
 pnpm test          # Run the test suite once
 pnpm test:watch    # Run tests in watch mode
+pnpm format        # Format everything with prettier
+pnpm lint          # Check formatting (prettier --check)
+pnpm verify        # lint + check + test
 ```
 
-**Deploying:** `pnpm deploy` ships whatever is _currently on disk_ in `/build`
-— it does not rebuild first. Always run `pnpm build` immediately before
-`pnpm deploy`, or a stale/incomplete local `build/` gets silently published
-(e.g. missing new routes).
+**Deploying:** `pnpm deploy` runs `pnpm verify` and `pnpm build` before
+publishing, and stops if either fails. Nothing else enforces formatting (no
+pre-commit hook, no CI), so run `pnpm format` before committing or deploy
+will refuse. Deploy only after the latest commit is pushed.
 
 Test suite: Vitest, covering src/lib/tenk/ and src/lib/cube/ (pure logic)
 plus component tests for /utils/tenk, /utils/cube and /utils/mastermorphix. No tests exist yet
