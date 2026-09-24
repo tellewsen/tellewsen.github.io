@@ -7,6 +7,8 @@ describe('/utils/cube page', () => {
 	it('starts blank except centers, and asks for the rest to be painted', () => {
 		render(Page);
 		expect(screen.getByLabelText('Front face, sticker 5, green')).toBeDisabled();
+		expect(screen.getByLabelText('Front face, sticker 5, green')).toHaveTextContent('F');
+		expect(screen.getByLabelText('Back face, sticker 5, blue')).toHaveTextContent('B');
 		expect(screen.getByLabelText('Front face, sticker 1, unpainted')).toBeInTheDocument();
 		expect(screen.getByText('48 stickers left to paint.')).toBeInTheDocument();
 	});

@@ -66,7 +66,9 @@
 							? 'unpainted'
 							: colorNames[c]}"
 						on:click={() => onStickerClick(i)}
-					></button>
+					>
+						{#if isCenter(i)}<span class="face-letter">{face}</span>{/if}
+					</button>
 				{/each}
 			</div>
 		{/each}
@@ -127,6 +129,16 @@
 	}
 	.sticker:disabled {
 		cursor: inherit;
+	}
+	/* Notation letter on each center, so moves like R' can be found from any view. */
+	.face-letter {
+		font-family: var(--mono);
+		font-size: 22px;
+		font-weight: 700;
+		color: #fff;
+		-webkit-text-stroke: 1.5px #000;
+		paint-order: stroke fill;
+		pointer-events: none;
 	}
 	.sticker.unpainted {
 		background: var(--dim);
