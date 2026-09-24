@@ -1,22 +1,30 @@
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-	--bg:      #0c0e10;
-	--bg2:     #111418;
-	--surface: #161b22;
-	--border:  #21262d;
-	--dim:     #30363d;
-	--muted:   #6e7681;
-	--text:    #cdd9e5;
-	--bright:  #e6edf3;
-	--accent:  #39d353;
-	--accent2: #58a6ff;
-	--accent3: #f78166;
-	--mono:    'JetBrains Mono', monospace;
-	--sans:    'Syne', sans-serif;
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
 }
 
-html { scroll-behavior: smooth; }
+:root {
+	--bg: #0c0e10;
+	--bg2: #111418;
+	--surface: #161b22;
+	--border: #21262d;
+	--dim: #30363d;
+	--muted: #6e7681;
+	--text: #cdd9e5;
+	--bright: #e6edf3;
+	--accent: #39d353;
+	--accent2: #58a6ff;
+	--accent3: #f78166;
+	--mono: 'JetBrains Mono', monospace;
+	--sans: 'Syne', sans-serif;
+}
+
+html {
+	scroll-behavior: smooth;
+}
 
 body {
 	background: var(--bg);
@@ -37,8 +45,8 @@ body::before {
 		0deg,
 		transparent,
 		transparent 2px,
-		rgba(0,0,0,0.03) 2px,
-		rgba(0,0,0,0.03) 4px
+		rgba(0, 0, 0, 0.03) 2px,
+		rgba(0, 0, 0, 0.03) 4px
 	);
 	pointer-events: none;
 	z-index: 1000;
@@ -50,8 +58,8 @@ body::after {
 	position: fixed;
 	inset: 0;
 	background-image:
-		linear-gradient(rgba(57,211,83,0.03) 1px, transparent 1px),
-		linear-gradient(90deg, rgba(57,211,83,0.03) 1px, transparent 1px);
+		linear-gradient(rgba(57, 211, 83, 0.03) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(57, 211, 83, 0.03) 1px, transparent 1px);
 	background-size: 40px 40px;
 	pointer-events: none;
 	z-index: 0;
@@ -71,12 +79,16 @@ p {
 	line-height: 1.7;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
 	color: var(--bright);
 	font-family: var(--sans);
 }
 
-input, textarea, select {
+input,
+textarea,
+select {
 	background: var(--bg2);
 	border: 1px solid var(--border);
 	border-radius: 4px;
@@ -87,7 +99,9 @@ input, textarea, select {
 	transition: border-color 0.15s;
 }
 
-input:focus, textarea:focus, select:focus {
+input:focus,
+textarea:focus,
+select:focus {
 	outline: none;
 	border-color: var(--accent);
 }
@@ -148,7 +162,9 @@ button:hover {
 	transition: border-color 0.2s;
 }
 
-.card:hover { border-color: var(--dim); }
+.card:hover {
+	border-color: var(--dim);
+}
 
 /* Chips */
 .chip {
@@ -164,7 +180,7 @@ button:hover {
 .chip:hover {
 	border-color: var(--accent);
 	color: var(--accent);
-	background: rgba(57,211,83,0.05);
+	background: rgba(57, 211, 83, 0.05);
 }
 
 .chip.featured {
@@ -197,7 +213,7 @@ button:hover {
 .btn-primary:hover {
 	background: transparent;
 	color: var(--accent);
-	box-shadow: 0 0 16px rgba(57,211,83,0.2);
+	box-shadow: 0 0 16px rgba(57, 211, 83, 0.2);
 	text-decoration: none;
 }
 
@@ -221,11 +237,24 @@ button:hover {
 }
 
 @keyframes fadeUp {
-	to { opacity: 1; transform: translateY(0); }
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
-.fade-in:nth-child(1) { animation-delay: 0.05s; }
-.fade-in:nth-child(2) { animation-delay: 0.12s; }
-.fade-in:nth-child(3) { animation-delay: 0.19s; }
-.fade-in:nth-child(4) { animation-delay: 0.26s; }
-.fade-in:nth-child(5) { animation-delay: 0.33s; }
+.fade-in:nth-child(1) {
+	animation-delay: 0.05s;
+}
+.fade-in:nth-child(2) {
+	animation-delay: 0.12s;
+}
+.fade-in:nth-child(3) {
+	animation-delay: 0.19s;
+}
+.fade-in:nth-child(4) {
+	animation-delay: 0.26s;
+}
+.fade-in:nth-child(5) {
+	animation-delay: 0.33s;
+}

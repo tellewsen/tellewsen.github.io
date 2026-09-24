@@ -56,27 +56,29 @@ The site uses a Cloudflare Worker to serve a styled ASCII response when accessed
 Create a new directory under `src/routes/posts/YYYYMMDD/` with two files:
 
 **`+page.js`** — metadata:
+
 ```js
 export const load = () => ({
-  metadata: {
-    title: "Post title",
-    date: "2026-01-01T12:00:00+01:00",
-  }
+	metadata: {
+		title: 'Post title',
+		date: '2026-01-01T12:00:00+01:00'
+	}
 });
 ```
 
 **`+page.svelte`** — content:
+
 ```svelte
 <script>
-  import Timestamp from '$lib/Timestamp.svelte';
-  export let data;
+	import Timestamp from '$lib/Timestamp.svelte';
+	export let data;
 </script>
 
 <article>
-  <h1>{data.metadata.title}</h1>
-  <small><Timestamp iso={data.metadata.date} /></small>
-  <hr />
-  <p>...</p>
+	<h1>{data.metadata.title}</h1>
+	<small><Timestamp iso={data.metadata.date} /></small>
+	<hr />
+	<p>...</p>
 </article>
 ```
 

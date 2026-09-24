@@ -12,7 +12,9 @@
 	{#each data.posts as post}
 		<a href={`/posts/${post.slug}`} class="post-card card">
 			<div class="post-meta">
-				<span class="post-date"><Timestamp iso={post.date} dateStyle="long" timeStyle="short" /></span>
+				<span class="post-date"
+					><Timestamp iso={post.date} dateStyle="long" timeStyle="short" /></span
+				>
 			</div>
 			<div class="post-title">{post.title}</div>
 			{#if post.summary}

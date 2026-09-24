@@ -241,8 +241,11 @@
 					<span class="reroll-dot" class:reroll-dot-filled={i < active.rerollsLeft}></span>
 				{/each}
 			</div>
-			<button type="button" class="btn btn-secondary" on:click={handleRollRemaining} disabled={complete}
-				>Roll remaining</button
+			<button
+				type="button"
+				class="btn btn-secondary"
+				on:click={handleRollRemaining}
+				disabled={complete}>Roll remaining</button
 			>
 			<button
 				type="button"
@@ -409,13 +412,34 @@
 		justify-self: center;
 	}
 
-	.pip-tl { grid-row: 1; grid-column: 1; }
-	.pip-tr { grid-row: 1; grid-column: 3; }
-	.pip-ml { grid-row: 2; grid-column: 1; }
-	.pip-mc { grid-row: 2; grid-column: 2; }
-	.pip-mr { grid-row: 2; grid-column: 3; }
-	.pip-bl { grid-row: 3; grid-column: 1; }
-	.pip-br { grid-row: 3; grid-column: 3; }
+	.pip-tl {
+		grid-row: 1;
+		grid-column: 1;
+	}
+	.pip-tr {
+		grid-row: 1;
+		grid-column: 3;
+	}
+	.pip-ml {
+		grid-row: 2;
+		grid-column: 1;
+	}
+	.pip-mc {
+		grid-row: 2;
+		grid-column: 2;
+	}
+	.pip-mr {
+		grid-row: 2;
+		grid-column: 3;
+	}
+	.pip-bl {
+		grid-row: 3;
+		grid-column: 1;
+	}
+	.pip-br {
+		grid-row: 3;
+		grid-column: 3;
+	}
 
 	.die-clear {
 		position: absolute;
@@ -517,8 +541,15 @@
 	}
 
 	@keyframes computing-pulse {
-		0%, 100% { opacity: 0.4; transform: scale(0.9); }
-		50% { opacity: 1; transform: scale(1.1); }
+		0%,
+		100% {
+			opacity: 0.4;
+			transform: scale(0.9);
+		}
+		50% {
+			opacity: 1;
+			transform: scale(1.1);
+		}
 	}
 
 	.final-total {

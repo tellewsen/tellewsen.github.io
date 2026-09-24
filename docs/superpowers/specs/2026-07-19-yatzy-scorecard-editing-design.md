@@ -23,18 +23,22 @@ without resetting dice or rerolls for the turn currently in progress.
 ### `setCategoryScore` — new pure function in `src/lib/yatzy/state.ts`
 
 ```ts
-export function setCategoryScore(state: GameState, category: number, score: number | null): GameState {
-  const categoryScores = [...state.categoryScores];
-  categoryScores[category] = score;
-  let usedMask = 0;
-  let upperTotal = 0;
-  for (let cat = 0; cat < NUM_CATEGORIES; cat++) {
-    if (categoryScores[cat] !== null) {
-      usedMask |= (1 << cat);
-      if (cat < UPPER_CATEGORY_COUNT) upperTotal += categoryScores[cat]!;
-    }
-  }
-  return { ...state, categoryScores, usedMask, upperTotal };
+export function setCategoryScore(
+	state: GameState,
+	category: number,
+	score: number | null
+): GameState {
+	const categoryScores = [...state.categoryScores];
+	categoryScores[category] = score;
+	let usedMask = 0;
+	let upperTotal = 0;
+	for (let cat = 0; cat < NUM_CATEGORIES; cat++) {
+		if (categoryScores[cat] !== null) {
+			usedMask |= 1 << cat;
+			if (cat < UPPER_CATEGORY_COUNT) upperTotal += categoryScores[cat]!;
+		}
+	}
+	return { ...state, categoryScores, usedMask, upperTotal };
 }
 ```
 
@@ -43,7 +47,7 @@ all-null and `rerollsLeft` to 2), this only ever touches `categoryScores`,
 `usedMask`, and `upperTotal` — recomputed from scratch off the full
 `categoryScores` array each call, so it can't drift out of sync regardless
 of edit order. `dice`/`rerollsLeft` are left exactly as they are, since
-editing a *past* category must not disturb whatever turn is currently in
+editing a _past_ category must not disturb whatever turn is currently in
 progress. Passing `score: null` clears a category back to unscored.
 
 ### `isValidScore` — new validation function, `src/lib/yatzy/scoreValidation.ts`

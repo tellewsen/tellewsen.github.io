@@ -34,7 +34,9 @@
 		color: var(--muted);
 	}
 
-	.footer-left span { color: var(--accent); }
+	.footer-left span {
+		color: var(--accent);
+	}
 
 	.footer-links {
 		display: flex;
@@ -50,5 +52,7 @@
 		transition: color 0.15s;
 	}
 
-	.footer-links a:hover { color: var(--accent2); }
+	.footer-links a:hover {
+		color: var(--accent2);
+	}
 </style>

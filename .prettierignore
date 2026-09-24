@@ -6,3 +6,9 @@ yarn.lock
 # Generated output
 /build
 /.svelte-kit
+
+# Vendored/generated Emscripten output (re-copied from optimal-yatzy)
+/src/lib/yatzy/wasm
+
+# Local Claude Code settings
+/.claude

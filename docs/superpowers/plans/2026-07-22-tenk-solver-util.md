@@ -26,12 +26,14 @@
 Captured by running `cd ~/projects/privat/claude/tenk-solver/basic && go run main.go` and `cd ~/projects/privat/claude/tenk-solver/houserule && go run main.go`:
 
 **Basic:**
+
 - Bust probability by dice rolled: n=1: 0.6667, n=2: 0.4444, n=3: 0.2778, n=4: 0.1574, n=5: 0.0772, n=6: 0.0231
 - Bank thresholds once on the board (threshold=0): n=1: 350, n=2: 250, n=3: 450, n=4: 1050, n=5: 3100, n=6: 18100
 - EV of a fresh turn once on the board (n=6, aUnits=0, threshold=0): 590.7
 - EV of a fresh turn under the entry rule (n=6, aUnits=0, threshold=1000): 483.9
 
 **House rule** (from `houserule/main.go`'s `sanityCheck()` plus its `main()` output):
+
 - Throw-1 one-1 case: `decompose([1,0,2,1,0,2])` → points=100, used=1
 - Throw-2 combined into a triple: kept from above + `[2,0,1,1,0,1]` → points=1000, used=3
 - Two-ones-total combined (not a triple): kept from above + `[1,0,1,1,0,1]` → points=200, used=2
@@ -45,11 +47,13 @@ Captured by running `cd ~/projects/privat/claude/tenk-solver/basic && go run mai
 ### Task 1: Add Vitest test tooling
 
 **Files:**
+
 - Modify: `package.json`
 - Modify: `vite.config.ts`
 - Create: `vitest-setup.ts`
 
 **Interfaces:**
+
 - Produces: `pnpm test` (single run) and `pnpm test:watch` (watch mode) scripts available to every later task's test steps.
 
 - [ ] **Step 1: Add dev dependencies**
@@ -112,10 +116,12 @@ which introduces golden-value regression tests for the ported DP logic."
 ### Task 2: `scoring.ts` — shared pure scoring logic
 
 **Files:**
+
 - Create: `src/lib/tenk/scoring.ts`
 - Test: `src/lib/tenk/scoring.test.ts`
 
 **Interfaces:**
+
 - Produces:
   - `kindScore(face: number, groupSize: number): number`
   - `countsFromDice(dice: number[]): number[]`
@@ -131,7 +137,12 @@ Create `src/lib/tenk/scoring.test.ts`:
 
 ```ts
 import { describe, it, expect } from 'vitest';
-import { kindScore, countsFromDice, generateRollOutcomes, bestCandidatesForCounts } from './scoring';
+import {
+	kindScore,
+	countsFromDice,
+	generateRollOutcomes,
+	bestCandidatesForCounts
+} from './scoring';
 
 describe('kindScore', () => {
 	it('scores a triple of 1s as 1000', () => {
@@ -363,10 +374,12 @@ and best-banking-combo search for an actual roll."
 ### Task 3: `solverBasic.ts` — basic-ruleset value function
 
 **Files:**
+
 - Create: `src/lib/tenk/solverBasic.ts`
 - Test: `src/lib/tenk/solverBasic.test.ts`
 
 **Interfaces:**
+
 - Consumes: `bestCandidatesForCounts`, `generateRollOutcomes` from `./scoring` (Task 2).
 - Produces:
   - `value(n: number, aUnits: number, threshold: number): number`
@@ -538,10 +551,12 @@ output (bust probabilities, bank thresholds, EVs)."
 ### Task 4: `solverHouserule.ts` — house-rule three-state DP
 
 **Files:**
+
 - Create: `src/lib/tenk/solverHouserule.ts`
 - Test: `src/lib/tenk/solverHouserule.test.ts`
 
 **Interfaces:**
+
 - Consumes: `kindScore`, `generateRollOutcomes`, `RollOutcome` from `./scoring` (Task 2).
 - Produces:
   - `interface Decomposition { points: number; used: number; banked: number[] }`
@@ -729,7 +744,12 @@ function componentsA(aUnits: number, threshold: number): ValueComponents {
 	return result;
 }
 
-function componentsB(n1: number, kept: number[], aUnits: number, threshold: number): ValueComponents {
+function componentsB(
+	n1: number,
+	kept: number[],
+	aUnits: number,
+	threshold: number
+): ValueComponents {
 	const a = aUnits * 50;
 	const key = keyB(n1, kept, aUnits, threshold);
 	const cached = memoB.get(key);
@@ -776,7 +796,10 @@ export function valueA(aUnits: number, threshold: number): number {
 	return componentsA(aUnits, threshold).best;
 }
 
-export function decisionComponentsA(aUnits: number, threshold: number): { bankVal: number; rerollVal: number } {
+export function decisionComponentsA(
+	aUnits: number,
+	threshold: number
+): { bankVal: number; rerollVal: number } {
 	const { bankVal, rerollVal } = componentsA(aUnits, threshold);
 	return { bankVal, rerollVal };
 }
@@ -833,10 +856,12 @@ and main() output."
 ### Task 5: `state.ts` — GameState model and transitions
 
 **Files:**
+
 - Create: `src/lib/tenk/state.ts`
 - Test: `src/lib/tenk/state.test.ts`
 
 **Interfaces:**
+
 - Consumes: nothing (no solver knowledge — pure state transitions).
 - Produces:
   - `type Ruleset = 'basic' | 'houserule'`
@@ -925,14 +950,22 @@ describe('applyBank', () => {
 	});
 
 	it('resets to hot dice (6 remaining, fresh phase) when all dice are used', () => {
-		const before = { ...initialGameState('houserule'), diceRemaining: 3, cyclePhase: 'independent' as const };
+		const before = {
+			...initialGameState('houserule'),
+			diceRemaining: 3,
+			cyclePhase: 'independent' as const
+		};
 		const after = applyBank(before, 300, 3);
 		expect(after.diceRemaining).toBe(6);
 		expect(after.cyclePhase).toBe('fresh');
 	});
 
 	it('preserves cyclePhase when not hot dice', () => {
-		const before = { ...initialGameState('houserule'), diceRemaining: 4, cyclePhase: 'independent' as const };
+		const before = {
+			...initialGameState('houserule'),
+			diceRemaining: 4,
+			cyclePhase: 'independent' as const
+		};
 		const after = applyBank(before, 100, 1);
 		expect(after.diceRemaining).toBe(3);
 		expect(after.cyclePhase).toBe('independent');
@@ -1049,7 +1082,11 @@ export function applyBank(state: GameState, points: number, diceUsed: number): G
 	};
 }
 
-export function enterCombiningWindow(state: GameState, keptCounts: number[], diceUsed: number): GameState {
+export function enterCombiningWindow(
+	state: GameState,
+	keptCounts: number[],
+	diceUsed: number
+): GameState {
 	return {
 		...state,
 		diceRemaining: state.diceRemaining - diceUsed,
@@ -1100,10 +1137,12 @@ stop-mid-combining)."
 ### Task 6: `match.ts` — opponents wrapper
 
 **Files:**
+
 - Create: `src/lib/tenk/match.ts`
 - Test: `src/lib/tenk/match.test.ts`
 
 **Interfaces:**
+
 - Consumes: `GameState`, `Ruleset`, `initialGameState` from `./state` (Task 5).
 - Produces:
   - `interface Opponent { name: string; score: number }`
@@ -1120,7 +1159,13 @@ Create `src/lib/tenk/match.test.ts`:
 
 ```ts
 import { describe, it, expect } from 'vitest';
-import { initialMatchState, addOpponent, removeOpponent, updateOpponentScore, renameOpponent } from './match';
+import {
+	initialMatchState,
+	addOpponent,
+	removeOpponent,
+	updateOpponentScore,
+	renameOpponent
+} from './match';
 
 describe('match state', () => {
 	it('starts with no opponents', () => {
@@ -1219,10 +1264,12 @@ own GameState, per the design's score-blind recommendation engine."
 ### Task 7: `recommend.ts` — recommendation API
 
 **Files:**
+
 - Create: `src/lib/tenk/recommend.ts`
 - Test: `src/lib/tenk/recommend.test.ts`
 
 **Interfaces:**
+
 - Consumes:
   - `GameState`, `applyBank`, `applyBust`, `enterCombiningWindow`, `resolveCombiningRoll`, `stopMidCombining`, `stopTurn` from `./state` (Task 5)
   - `countsFromDice`, `bestCandidatesForCounts` from `./scoring` (Task 2)
@@ -1256,7 +1303,9 @@ describe('getRollAdvice — basic ruleset', () => {
 		if (advice.kind !== 'basicOptions') throw new Error('expected basicOptions');
 		expect(advice.options.length).toBeGreaterThan(0);
 		for (let i = 1; i < advice.options.length; i++) {
-			expect(advice.options[i - 1].expectedValue).toBeGreaterThanOrEqual(advice.options[i].expectedValue);
+			expect(advice.options[i - 1].expectedValue).toBeGreaterThanOrEqual(
+				advice.options[i].expectedValue
+			);
 		}
 		const best = advice.options[0];
 		expect(best.onReroll.turnScore).toBe(best.points);
@@ -1400,7 +1449,11 @@ export function getRollAdvice(state: GameState, roll: number[]): RollAdvice {
 		for (const [diceUsed, candidate] of candidates) {
 			const remaining = state.diceRemaining - diceUsed;
 			const nPrime = remaining === 0 ? 6 : remaining;
-			const { bankVal, rerollVal } = basicDecisionComponents(nPrime, aUnits + candidate.points / 50, threshold);
+			const { bankVal, rerollVal } = basicDecisionComponents(
+				nPrime,
+				aUnits + candidate.points / 50,
+				threshold
+			);
 			const bankedState = applyBank(state, candidate.points, diceUsed);
 			options.push({
 				banked: candidate.banked,
@@ -1500,9 +1553,11 @@ GameState for stop and reroll."
 ### Task 8: `+page.svelte` — the UI
 
 **Files:**
+
 - Create: `src/routes/utils/tenk/+page.svelte`
 
 **Interfaces:**
+
 - Consumes: everything from Tasks 2–7 (`state.ts`, `match.ts`, `recommend.ts`).
 
 - [ ] **Step 1: Create `src/routes/utils/tenk/+page.svelte`**
@@ -1655,7 +1710,9 @@ GameState for stop and reroll."
 					type="button"
 					class="die"
 					class:die-empty={currentRoll[i] === null}
-					aria-label={currentRoll[i] === null ? `Die ${i + 1}, empty` : `Die ${i + 1}, value ${currentRoll[i]}`}
+					aria-label={currentRoll[i] === null
+						? `Die ${i + 1}, empty`
+						: `Die ${i + 1}, value ${currentRoll[i]}`}
 					on:click={() => handleDieClick(i)}
 				>
 					{#if currentRoll[i] !== null}
@@ -1667,7 +1724,9 @@ GameState for stop and reroll."
 			{/each}
 		</div>
 		<div class="dice-actions">
-			<button type="button" class="btn btn-secondary" on:click={handleRollRemaining}>Roll remaining</button>
+			<button type="button" class="btn btn-secondary" on:click={handleRollRemaining}
+				>Roll remaining</button
+			>
 			<button type="button" class="btn btn-secondary" on:click={resetRollInput}>Clear</button>
 			<button type="button" class="btn btn-secondary" on:click={handleNewGame}>New game</button>
 		</div>
@@ -1678,7 +1737,9 @@ GameState for stop and reroll."
 			<p class="hint">Enter all {match.self.diceRemaining} dice to see a recommendation.</p>
 		{:else if advice.kind === 'bust'}
 			<p class="bust-message">Bust! This turn's points are forfeited.</p>
-			<button type="button" class="btn btn-secondary" on:click={handleBustAcknowledge}>Continue</button>
+			<button type="button" class="btn btn-secondary" on:click={handleBustAcknowledge}
+				>Continue</button
+			>
 		{:else if advice.kind === 'basicOptions'}
 			{#if !selectedOption}
 				{#each advice.options as option, index (option.banked.join(','))}
@@ -1690,14 +1751,17 @@ GameState for stop and reroll."
 					>
 						{#if index === 0}<span class="best-badge">★ Best move</span>{/if}
 						<span class="option-text">
-							Bank {option.diceUsed} {option.diceUsed === 1 ? 'die' : 'dice'} for {option.points} pts
-							(expected value {option.expectedValue.toFixed(1)})
+							Bank {option.diceUsed}
+							{option.diceUsed === 1 ? 'die' : 'dice'} for {option.points} pts (expected value {option.expectedValue.toFixed(
+								1
+							)})
 						</span>
 					</button>
 				{/each}
 			{:else}
 				<p class="hint">
-					Banked {selectedOption.points} pts. Turn total: {match.self.turnScore + selectedOption.points}.
+					Banked {selectedOption.points} pts. Turn total: {match.self.turnScore +
+						selectedOption.points}.
 				</p>
 				<button
 					type="button"
@@ -1705,7 +1769,9 @@ GameState for stop and reroll."
 					class:best-option={selectedOption.recommend === 'stop'}
 					on:click={handleOptionStop}
 				>
-					Stop — bank {match.self.turnScore + selectedOption.points} pts (EV {selectedOption.stopEV.toFixed(1)})
+					Stop — bank {match.self.turnScore + selectedOption.points} pts (EV {selectedOption.stopEV.toFixed(
+						1
+					)})
 				</button>
 				<button
 					type="button"
@@ -1738,11 +1804,17 @@ GameState for stop and reroll."
 	</div>
 
 	<div class="card status-card">
-		<div class="score-row"><strong>Total score</strong><span>{match.self.totalScore} / 10,000</span></div>
 		<div class="score-row">
-			<strong>On the board</strong><span>{match.self.onBoard ? 'yes' : 'no (need 1000+ in one turn)'}</span>
+			<strong>Total score</strong><span>{match.self.totalScore} / 10,000</span>
 		</div>
-		<div class="score-row"><strong>Turn score so far</strong><span>{match.self.turnScore}</span></div>
+		<div class="score-row">
+			<strong>On the board</strong><span
+				>{match.self.onBoard ? 'yes' : 'no (need 1000+ in one turn)'}</span
+			>
+		</div>
+		<div class="score-row">
+			<strong>Turn score so far</strong><span>{match.self.turnScore}</span>
+		</div>
 	</div>
 
 	<div class="card opponents-card">
@@ -1766,7 +1838,9 @@ GameState for stop and reroll."
 				</span>
 			</div>
 		{/each}
-		<button type="button" class="btn btn-secondary" on:click={handleAddOpponent}>Add opponent</button>
+		<button type="button" class="btn btn-secondary" on:click={handleAddOpponent}
+			>Add opponent</button
+		>
 	</div>
 
 	<div class="card history-card">
@@ -1967,6 +2041,7 @@ pnpm dev
 ```
 
 Open `http://localhost:5173/utils/tenk` in a browser. Verify:
+
 - Basic ruleset: click 6 dice to some values with a scoring combo (e.g. two 1s + junk), confirm ranked options appear, click one, confirm a stop/reroll choice appears, click stop, confirm total score updates and turn history logs an entry.
 - House rule: switch ruleset, roll 6 dice with a partial score, confirm the single forced stop/reroll card appears, click reroll, confirm the dice row shrinks to the remaining count and a second roll combines correctly (try the two documented worked examples: 100→1000 and 100→200→300 from `tenk-solver/CLAUDE.md`).
 - Add/remove/edit an opponent, confirm it doesn't affect the recommendation.
@@ -1990,9 +2065,11 @@ toward 10,000, on-the-board status, opponents panel, turn history."
 ### Task 9: Component tests for `+page.svelte`
 
 **Files:**
+
 - Create: `src/routes/utils/tenk/page.test.ts`
 
 **Interfaces:**
+
 - Consumes: the page component from Task 8 via `@testing-library/svelte`.
 
 - [ ] **Step 1: Write the tests**
@@ -2079,10 +2156,12 @@ roll-remaining triggering a recommendation."
 ### Task 10: Link from the utils index, update CLAUDE.md
 
 **Files:**
+
 - Modify: `src/routes/utils/+page.svelte`
 - Modify: `CLAUDE.md`
 
 **Interfaces:**
+
 - None (documentation/navigation only).
 
 - [ ] **Step 1: Add a card to the utils index**
@@ -2090,10 +2169,10 @@ roll-remaining triggering a recommendation."
 In `src/routes/utils/+page.svelte`, add this card right after the existing yatzy card (after the `</a>` that closes the `/utils/yatzy` card, before `</div>` that closes `.utils-grid`):
 
 ```svelte
-			<a href="/utils/tenk" class="card util-card">
-				<div class="util-name">tenk</div>
-				<div class="util-desc">Optimal-play "10,000" dice game assistant</div>
-			</a>
+<a href="/utils/tenk" class="card util-card">
+	<div class="util-name">tenk</div>
+	<div class="util-desc">Optimal-play "10,000" dice game assistant</div>
+</a>
 ```
 
 - [ ] **Step 2: Update `CLAUDE.md`**
@@ -2154,9 +2233,11 @@ architecture (as opposed to yatzy's WASM approach)."
 ### Task 11: Point `tenk-solver`'s README at the website util
 
 **Files:**
+
 - Modify: `~/projects/privat/claude/tenk-solver/README.md` (separate repo — `cd` there for this task)
 
 **Interfaces:**
+
 - None (documentation only).
 
 - [ ] **Step 1: Add a pointer**

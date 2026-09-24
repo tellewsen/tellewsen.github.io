@@ -14,7 +14,7 @@ pnpm test          # Run the test suite once
 pnpm test:watch    # Run tests in watch mode
 ```
 
-**Deploying:** `pnpm deploy` ships whatever is *currently on disk* in `/build`
+**Deploying:** `pnpm deploy` ships whatever is _currently on disk_ in `/build`
 — it does not rebuild first. Always run `pnpm build` immediately before
 `pnpm deploy`, or a stale/incomplete local `build/` gets silently published
 (e.g. missing new routes).
@@ -52,7 +52,7 @@ This is a **SvelteKit static site** (adapter-static) deployed to GitHub Pages at
 - `src/routes/utils/mastermorphix/` — Mastermorphix solver, the first shape
   mod on the `src/lib/cube/` layers. `geometry.ts` gives each slot's
   position and each piece's rigid rotation; `morphix.ts` builds piece shapes
-  as 3x3 cells clipped by a tetrahedron and compares positions by *look*
+  as 3x3 cells clipped by a tetrahedron and compares positions by _look_
   (`slotLook`), since identical-looking pieces (same-colour side pieces,
   triangle twists) can't be told apart. `checkMorphix` turns an entered look
   into reachable 3x3 candidates; `solver.ts` with `centers: true` also solves
@@ -66,6 +66,7 @@ This is a **SvelteKit static site** (adapter-static) deployed to GitHub Pages at
 ### Blog post pattern
 
 Each post lives in `src/routes/posts/YYYYMMDD/`:
+
 - `+page.js` — exports a `load()` that returns `{ metadata: { title, date } }` (date as ISO string). This is how the post index discovers and sorts posts.
 - `+page.svelte` — imports `Timestamp` from `$lib`, renders `data.metadata.title` and `data.metadata.date`.
 

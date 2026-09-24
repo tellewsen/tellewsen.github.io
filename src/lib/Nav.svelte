@@ -33,7 +33,9 @@
 		letter-spacing: 0.02em;
 	}
 
-	.nav-logo span { color: var(--accent); }
+	.nav-logo span {
+		color: var(--accent);
+	}
 
 	.nav-links {
 		display: flex;
@@ -56,7 +58,7 @@
 	.nav-links a:hover {
 		color: var(--accent);
 		border-color: var(--accent);
-		background: rgba(57,211,83,0.06);
+		background: rgba(57, 211, 83, 0.06);
 	}
 
 	.nav-links a.active {

@@ -91,7 +91,7 @@
 		if (ctx) ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
 	}
 
-	$: input, isWifiMode, logoData, form, generateQRCode();
+	$: (input, isWifiMode, logoData, form, generateQRCode());
 </script>
 
 <div class="container">

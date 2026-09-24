@@ -20,10 +20,12 @@
 ### Task 1: `setCategoryScore` and `isValidScore`
 
 **Files:**
+
 - Modify: `src/lib/yatzy/state.ts`
 - Create: `src/lib/yatzy/scoreValidation.ts`
 
 **Interfaces:**
+
 - Produces: `setCategoryScore(state: GameState, category: number, score: number | null): GameState` (exported from `state.ts`), `isValidScore(category: number, score: number): boolean` (exported from `scoreValidation.ts`) — both consumed by the page in Task 2.
 
 - [ ] **Step 1: Add `setCategoryScore` to `state.ts`**
@@ -31,19 +33,23 @@
 Add this function after the existing `scoreCategory` function (currently ending at line 87):
 
 ```ts
-export function setCategoryScore(state: GameState, category: number, score: number | null): GameState {
-  const categoryScores = [...state.categoryScores];
-  categoryScores[category] = score;
-  let usedMask = 0;
-  let upperTotal = 0;
-  for (let cat = 0; cat < NUM_CATEGORIES; cat++) {
-    const s = categoryScores[cat];
-    if (s !== null) {
-      usedMask |= (1 << cat);
-      if (cat < UPPER_CATEGORY_COUNT) upperTotal += s;
-    }
-  }
-  return { ...state, categoryScores, usedMask, upperTotal };
+export function setCategoryScore(
+	state: GameState,
+	category: number,
+	score: number | null
+): GameState {
+	const categoryScores = [...state.categoryScores];
+	categoryScores[category] = score;
+	let usedMask = 0;
+	let upperTotal = 0;
+	for (let cat = 0; cat < NUM_CATEGORIES; cat++) {
+		const s = categoryScores[cat];
+		if (s !== null) {
+			usedMask |= 1 << cat;
+			if (cat < UPPER_CATEGORY_COUNT) upperTotal += s;
+		}
+	}
+	return { ...state, categoryScores, usedMask, upperTotal };
 }
 ```
 
@@ -55,7 +61,7 @@ export function setCategoryScore(state: GameState, category: number, score: numb
 // number"). Each achievable-value set is computed directly from dice-face
 // combinatorics, not hardcoded, so it can't drift out of sync with the
 // actual rules.
-import { UPPER_CATEGORY_COUNT } from "./state";
+import { UPPER_CATEGORY_COUNT } from './state';
 
 export const CatOnePair = 6;
 export const CatTwoPairs = 7;
@@ -68,49 +74,59 @@ export const CatChance = 13;
 export const CatYatzy = 14;
 
 function achievableNOfAKind(count: number): Set<number> {
-  const values = new Set<number>([0]);
-  for (let face = 1; face <= 6; face++) values.add(count * face);
-  return values;
+	const values = new Set<number>([0]);
+	for (let face = 1; face <= 6; face++) values.add(count * face);
+	return values;
 }
 
 function achievableTwoPairs(): Set<number> {
-  const values = new Set<number>([0]);
-  for (let a = 1; a <= 6; a++) {
-    for (let b = 1; b <= 6; b++) {
-      if (a !== b) values.add(2 * (a + b));
-    }
-  }
-  return values;
+	const values = new Set<number>([0]);
+	for (let a = 1; a <= 6; a++) {
+		for (let b = 1; b <= 6; b++) {
+			if (a !== b) values.add(2 * (a + b));
+		}
+	}
+	return values;
 }
 
 function achievableFullHouse(): Set<number> {
-  const values = new Set<number>([0]);
-  for (let triple = 1; triple <= 6; triple++) {
-    for (let pair = 1; pair <= 6; pair++) {
-      if (triple !== pair) values.add(3 * triple + 2 * pair);
-    }
-  }
-  return values;
+	const values = new Set<number>([0]);
+	for (let triple = 1; triple <= 6; triple++) {
+		for (let pair = 1; pair <= 6; pair++) {
+			if (triple !== pair) values.add(3 * triple + 2 * pair);
+		}
+	}
+	return values;
 }
 
 export function isValidScore(category: number, score: number): boolean {
-  if (!Number.isInteger(score) || score < 0) return false;
-  if (category < UPPER_CATEGORY_COUNT) {
-    const face = category + 1;
-    return score % face === 0 && score >= 0 && score <= 5 * face;
-  }
-  switch (category) {
-    case CatOnePair: return achievableNOfAKind(2).has(score);
-    case CatTwoPairs: return achievableTwoPairs().has(score);
-    case CatThreeKind: return achievableNOfAKind(3).has(score);
-    case CatFourKind: return achievableNOfAKind(4).has(score);
-    case CatSmallStraight: return score === 0 || score === 15;
-    case CatLargeStraight: return score === 0 || score === 20;
-    case CatFullHouse: return achievableFullHouse().has(score);
-    case CatChance: return score >= 5 && score <= 30;
-    case CatYatzy: return score === 0 || score === 50;
-    default: return false;
-  }
+	if (!Number.isInteger(score) || score < 0) return false;
+	if (category < UPPER_CATEGORY_COUNT) {
+		const face = category + 1;
+		return score % face === 0 && score >= 0 && score <= 5 * face;
+	}
+	switch (category) {
+		case CatOnePair:
+			return achievableNOfAKind(2).has(score);
+		case CatTwoPairs:
+			return achievableTwoPairs().has(score);
+		case CatThreeKind:
+			return achievableNOfAKind(3).has(score);
+		case CatFourKind:
+			return achievableNOfAKind(4).has(score);
+		case CatSmallStraight:
+			return score === 0 || score === 15;
+		case CatLargeStraight:
+			return score === 0 || score === 20;
+		case CatFullHouse:
+			return achievableFullHouse().has(score);
+		case CatChance:
+			return score >= 5 && score <= 30;
+		case CatYatzy:
+			return score === 0 || score === 50;
+		default:
+			return false;
+	}
 }
 ```
 
@@ -166,9 +182,11 @@ combinatorics rather than hardcoded."
 ### Task 2: Inline scorecard editing UI
 
 **Files:**
+
 - Modify: `src/routes/utils/yatzy/+page.svelte`
 
 **Interfaces:**
+
 - Consumes: `setCategoryScore`, `isValidScore` from Task 1.
 
 - [ ] **Step 1: Add imports**
@@ -176,21 +194,21 @@ combinatorics rather than hardcoded."
 In the `<script>` block, add `setCategoryScore` to the existing `$lib/yatzy/state` import list (after `scoreCategory`):
 
 ```ts
-	import {
-		setDice,
-		advanceReroll,
-		applyHold,
-		rollRemaining,
-		scoreCategory,
-		setCategoryScore,
-		allDiceValid,
-		isGameComplete,
-		totalScore,
-		bonusEarned,
-		CATEGORY_NAMES,
-		NUM_CATEGORIES
-	} from '$lib/yatzy/state';
-	import { isValidScore } from '$lib/yatzy/scoreValidation';
+import {
+	setDice,
+	advanceReroll,
+	applyHold,
+	rollRemaining,
+	scoreCategory,
+	setCategoryScore,
+	allDiceValid,
+	isGameComplete,
+	totalScore,
+	bonusEarned,
+	CATEGORY_NAMES,
+	NUM_CATEGORIES
+} from '$lib/yatzy/state';
+import { isValidScore } from '$lib/yatzy/scoreValidation';
 ```
 
 - [ ] **Step 2: Add editing state and handler**
@@ -198,49 +216,49 @@ In the `<script>` block, add `setCategoryScore` to the existing `$lib/yatzy/stat
 After the existing `newGame()` function (currently ending at line 137, right before the closing `</script>`), add:
 
 ```ts
-	let editingCategory: number | null = null;
-	let editingValue = '';
-	let editingError: string | null = null;
+let editingCategory: number | null = null;
+let editingValue = '';
+let editingError: string | null = null;
 
-	function startEditingCategory(category: number) {
-		editingCategory = category;
-		const current = active.categoryScores[category];
-		editingValue = current === null ? '' : String(current);
-		editingError = null;
-	}
+function startEditingCategory(category: number) {
+	editingCategory = category;
+	const current = active.categoryScores[category];
+	editingValue = current === null ? '' : String(current);
+	editingError = null;
+}
 
-	function cancelEditingCategory() {
-		editingCategory = null;
-		editingValue = '';
-		editingError = null;
-	}
+function cancelEditingCategory() {
+	editingCategory = null;
+	editingValue = '';
+	editingError = null;
+}
 
-	function commitEditingCategory() {
-		if (editingCategory === null) return;
-		const category = editingCategory;
-		const trimmed = editingValue.trim();
-		if (trimmed === '') {
-			const state = activeGameState(match);
-			setMatch(withActiveGameState(match, setCategoryScore(state, category, null)));
-			cancelEditingCategory();
-			if (allDiceValid(activeGameState(match).dice)) void maybeQuery();
-			return;
-		}
-		const parsed = Number(trimmed);
-		if (!isValidScore(category, parsed)) {
-			editingError = `Not a valid score for ${CATEGORY_NAMES[category]}`;
-			return;
-		}
+function commitEditingCategory() {
+	if (editingCategory === null) return;
+	const category = editingCategory;
+	const trimmed = editingValue.trim();
+	if (trimmed === '') {
 		const state = activeGameState(match);
-		setMatch(withActiveGameState(match, setCategoryScore(state, category, parsed)));
+		setMatch(withActiveGameState(match, setCategoryScore(state, category, null)));
 		cancelEditingCategory();
 		if (allDiceValid(activeGameState(match).dice)) void maybeQuery();
+		return;
 	}
+	const parsed = Number(trimmed);
+	if (!isValidScore(category, parsed)) {
+		editingError = `Not a valid score for ${CATEGORY_NAMES[category]}`;
+		return;
+	}
+	const state = activeGameState(match);
+	setMatch(withActiveGameState(match, setCategoryScore(state, category, parsed)));
+	cancelEditingCategory();
+	if (allDiceValid(activeGameState(match).dice)) void maybeQuery();
+}
 
-	function handleEditingKeydown(event: KeyboardEvent) {
-		if (event.key === 'Enter') commitEditingCategory();
-		else if (event.key === 'Escape') cancelEditingCategory();
-	}
+function handleEditingKeydown(event: KeyboardEvent) {
+	if (event.key === 'Enter') commitEditingCategory();
+	else if (event.key === 'Escape') cancelEditingCategory();
+}
 ```
 
 - [ ] **Step 3: Wire the scorecard rows to the new editing state**
@@ -248,43 +266,39 @@ After the existing `newGame()` function (currently ending at line 137, right bef
 Replace the scorecard `{#each}` block (currently lines 249-254):
 
 ```svelte
-		{#each Array(NUM_CATEGORIES) as _, cat (cat)}
-			<div class="score-row">
-				<span>{CATEGORY_NAMES[cat]}</span>
-				<span>{active.categoryScores[cat] === null ? '—' : active.categoryScores[cat]}</span>
-			</div>
-		{/each}
+{#each Array(NUM_CATEGORIES) as _, cat (cat)}
+	<div class="score-row">
+		<span>{CATEGORY_NAMES[cat]}</span>
+		<span>{active.categoryScores[cat] === null ? '—' : active.categoryScores[cat]}</span>
+	</div>
+{/each}
 ```
 
 with:
 
 ```svelte
-		{#each Array(NUM_CATEGORIES) as _, cat (cat)}
-			<div class="score-row score-row-editable">
-				<span>{CATEGORY_NAMES[cat]}</span>
-				{#if editingCategory === cat}
-					<span class="score-edit-wrapper">
-						<input
-							class="score-edit-input"
-							type="number"
-							bind:value={editingValue}
-							on:keydown={handleEditingKeydown}
-							on:blur={commitEditingCategory}
-							use:focusOnMount
-						/>
-						{#if editingError}<span class="score-edit-error">{editingError}</span>{/if}
-					</span>
-				{:else}
-					<button
-						type="button"
-						class="score-value-button"
-						on:click={() => startEditingCategory(cat)}
-					>
-						{active.categoryScores[cat] === null ? '—' : active.categoryScores[cat]}
-					</button>
-				{/if}
-			</div>
-		{/each}
+{#each Array(NUM_CATEGORIES) as _, cat (cat)}
+	<div class="score-row score-row-editable">
+		<span>{CATEGORY_NAMES[cat]}</span>
+		{#if editingCategory === cat}
+			<span class="score-edit-wrapper">
+				<input
+					class="score-edit-input"
+					type="number"
+					bind:value={editingValue}
+					on:keydown={handleEditingKeydown}
+					on:blur={commitEditingCategory}
+					use:focusOnMount
+				/>
+				{#if editingError}<span class="score-edit-error">{editingError}</span>{/if}
+			</span>
+		{:else}
+			<button type="button" class="score-value-button" on:click={() => startEditingCategory(cat)}>
+				{active.categoryScores[cat] === null ? '—' : active.categoryScores[cat]}
+			</button>
+		{/if}
+	</div>
+{/each}
 ```
 
 - [ ] **Step 4: Add the `focusOnMount` action**
@@ -292,10 +306,10 @@ with:
 Svelte doesn't auto-focus a newly-rendered input, so add a tiny action. In the `<script>` block, after the `PIP_LAYOUTS` constant, add:
 
 ```ts
-	function focusOnMount(node: HTMLInputElement) {
-		node.focus();
-		node.select();
-	}
+function focusOnMount(node: HTMLInputElement) {
+	node.focus();
+	node.select();
+}
 ```
 
 - [ ] **Step 5: Add CSS for the new elements**
@@ -303,42 +317,42 @@ Svelte doesn't auto-focus a newly-rendered input, so add a tiny action. In the `
 In the `<style>` block, after the existing `.score-row.total-row` rule (currently the last rule, ending the file), add:
 
 ```css
-	.score-row-editable {
-		align-items: center;
-	}
+.score-row-editable {
+	align-items: center;
+}
 
-	.score-value-button {
-		background: transparent;
-		border: 1px solid transparent;
-		border-radius: 4px;
-		color: inherit;
-		font-family: inherit;
-		font-size: 13px;
-		padding: 2px 8px;
-		cursor: pointer;
-	}
+.score-value-button {
+	background: transparent;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	color: inherit;
+	font-family: inherit;
+	font-size: 13px;
+	padding: 2px 8px;
+	cursor: pointer;
+}
 
-	.score-value-button:hover {
-		border-color: var(--border);
-		background: var(--bg2);
-	}
+.score-value-button:hover {
+	border-color: var(--border);
+	background: var(--bg2);
+}
 
-	.score-edit-wrapper {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-	}
+.score-edit-wrapper {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
 
-	.score-edit-input {
-		width: 64px;
-		font-size: 13px;
-		padding: 2px 6px;
-	}
+.score-edit-input {
+	width: 64px;
+	font-size: 13px;
+	padding: 2px 6px;
+}
 
-	.score-edit-error {
-		font-size: 11px;
-		color: var(--accent3);
-	}
+.score-edit-error {
+	font-size: 11px;
+	color: var(--accent3);
+}
 ```
 
 - [ ] **Step 6: Typecheck**
@@ -357,6 +371,7 @@ pnpm dev
 ```
 
 Open `/utils/yatzy` in a browser and verify:
+
 - Click an unscored category ("—") → an input appears, focused and selected.
 - Type a valid score for that category (e.g. `18` for Sixes) and press Enter → the row shows `18`, "Upper total" updates.
 - Click a scored category, clear the input (empty), press Enter → the row reverts to "—", "Upper total" recalculates without it.

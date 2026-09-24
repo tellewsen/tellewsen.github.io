@@ -22,10 +22,13 @@
 	</p>
 	<p>
 		The solver uses Herbert Kociemba's
-		<a href="https://en.wikipedia.org/wiki/Optimal_solutions_for_the_Rubik%27s_Cube#Kociemba's_algorithm">two-phase algorithm</a> from 1992. The first phase gets
-		the cube into a smaller set of positions that can be solved with only a few kinds of moves; the
-		second phase finishes from there. Both phases search using precomputed distance tables. The code
-		is a TypeScript implementation written with Claude Code. It isn't copied from Kociemba's
+		<a
+			href="https://en.wikipedia.org/wiki/Optimal_solutions_for_the_Rubik%27s_Cube#Kociemba's_algorithm"
+			>two-phase algorithm</a
+		>
+		from 1992. The first phase gets the cube into a smaller set of positions that can be solved with only
+		a few kinds of moves; the second phase finishes from there. Both phases search using precomputed distance
+		tables. The code is a TypeScript implementation written with Claude Code. It isn't copied from Kociemba's
 		<a href="https://github.com/hkociemba/RubiksCube-TwophaseSolver">own solver</a>, but it follows
 		his published conventions closely, and the algorithm is entirely his.
 	</p>
@@ -37,5 +40,8 @@
 		from taking each piece of a 3x3 and cutting it with a tetrahedron.
 	</p>
 	<p>I still don't understand the puzzle. I just follow the steps.</p>
-	<p>At least I don't have to look at this monstrosity of a cube when I give up on solving it any more.</p>
+	<p>
+		At least I don't have to look at this monstrosity of a cube when I give up on solving it any
+		more.
+	</p>
 </article>

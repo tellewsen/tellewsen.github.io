@@ -152,10 +152,12 @@
 	<div class="section-label">// utils / mastermorphix</div>
 
 	<p class="intro">
-		Master Pyramorphix (Mastermorphix) solver. It turns like a 3x3 <a href="/utils/cube">Rubik's cube</a>, just with a
-		different shape. Hold yours with the <strong>{centerName(0)}</strong> edge on top and the
-		<strong>{centerName(2)}</strong> edge facing you. The two-colour edges never leave their place,
-		they only rotate, so this fixes which way is which.
+		Master Pyramorphix (Mastermorphix) solver. It turns like a 3x3 <a href="/utils/cube"
+			>Rubik's cube</a
+		>, just with a different shape. Hold yours with the <strong>{centerName(0)}</strong> edge on top
+		and the
+		<strong>{centerName(2)}</strong> edge facing you. The two-colour edges never leave their place, they
+		only rotate, so this fixes which way is which.
 	</p>
 	<p class="intro">
 		Then click each piece on the model and pick what that spot looks like on your puzzle. Pieces do
@@ -290,8 +292,8 @@
 			<summary>Move notation</summary>
 			<ul class="rules-list">
 				<li>
-					Each letter names a layer by its two-colour edge: U (top), D (bottom), F (front), B (back), R
-					(right), L (left). The letters are shown on the model's edges.
+					Each letter names a layer by its two-colour edge: U (top), D (bottom), F (front), B
+					(back), R (right), L (left). The letters are shown on the model's edges.
 				</li>
 				<li>A letter alone means a quarter turn clockwise, as seen looking at that edge.</li>
 				<li>' (prime) means counter-clockwise; 2 means two quarter turns.</li>

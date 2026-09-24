@@ -30,14 +30,40 @@
 			<span class="t-cmd">cat</span>&nbsp;<span class="t-val">profile.json</span>
 		</div>
 		<span class="t-blank"></span>
-		<span class="t-out">{"{"}</span>
-		<span class="t-out">&nbsp;&nbsp;<span class="t-key">"name"</span>: <span class="t-string">"Andreas Ellewsen"</span>,</span>
-		<span class="t-out">&nbsp;&nbsp;<span class="t-key">"education"</span>: <span class="t-string">"MSc Astronomy, University of Oslo (2018)"</span>,</span>
-		<span class="t-out">&nbsp;&nbsp;<span class="t-key">"current"</span>: <span class="t-string">"Software Developer @ <a class="t-link" href="https://itera.com" target="_blank">Itera</a>"</span>,</span>
-		<span class="t-out">&nbsp;&nbsp;<span class="t-key">"prev"</span>: <span class="t-string">"5+ years @ <a class="t-link" href="https://uio.no" target="_blank">University of Oslo</a>"</span>,</span>
-		<span class="t-out">&nbsp;&nbsp;<span class="t-key">"stack"</span>: [<span class="t-string">"Python"</span>, <span class="t-string">"React"</span>, <span class="t-string">"Svelte"</span>],</span>
-		<span class="t-out">&nbsp;&nbsp;<span class="t-key">"interests"</span>: [<span class="t-string">"backend arch"</span>, <span class="t-string">"API design"</span>, <span class="t-string">"video games"</span>]</span>
-		<span class="t-out">{"}"}</span>
+		<span class="t-out">{'{'}</span>
+		<span class="t-out"
+			>&nbsp;&nbsp;<span class="t-key">"name"</span>:
+			<span class="t-string">"Andreas Ellewsen"</span>,</span
+		>
+		<span class="t-out"
+			>&nbsp;&nbsp;<span class="t-key">"education"</span>:
+			<span class="t-string">"MSc Astronomy, University of Oslo (2018)"</span>,</span
+		>
+		<span class="t-out"
+			>&nbsp;&nbsp;<span class="t-key">"current"</span>:
+			<span class="t-string"
+				>"Software Developer @ <a class="t-link" href="https://itera.com" target="_blank">Itera</a
+				>"</span
+			>,</span
+		>
+		<span class="t-out"
+			>&nbsp;&nbsp;<span class="t-key">"prev"</span>:
+			<span class="t-string"
+				>"5+ years @ <a class="t-link" href="https://uio.no" target="_blank">University of Oslo</a
+				>"</span
+			>,</span
+		>
+		<span class="t-out"
+			>&nbsp;&nbsp;<span class="t-key">"stack"</span>: [<span class="t-string">"Python"</span>,
+			<span class="t-string">"React"</span>, <span class="t-string">"Svelte"</span>],</span
+		>
+		<span class="t-out"
+			>&nbsp;&nbsp;<span class="t-key">"interests"</span>: [<span class="t-string"
+				>"backend arch"</span
+			>, <span class="t-string">"API design"</span>,
+			<span class="t-string">"video games"</span>]</span
+		>
+		<span class="t-out">{'}'}</span>
 		<span class="t-blank"></span>
 		<div class="t-line">
 			<span class="t-prompt">$ </span>
@@ -53,25 +79,29 @@
 		<div class="card">
 			<div class="card-label">the astronomy thing</div>
 			<div class="card-val">
-				Studying physics and astronomy means spending a lot of time turning messy data into something useful. That carries over — I tend to approach software problems the same way.
+				Studying physics and astronomy means spending a lot of time turning messy data into
+				something useful. That carries over — I tend to approach software problems the same way.
 			</div>
 		</div>
 		<div class="card">
 			<div class="card-label">what I enjoy</div>
 			<div class="card-val">
-				Clean APIs, systems that do one thing well, and frontend work that doesn't feel like a compromise. Backend by preference, full-stack by necessity.
+				Clean APIs, systems that do one thing well, and frontend work that doesn't feel like a
+				compromise. Backend by preference, full-stack by necessity.
 			</div>
 		</div>
 		<div class="card">
 			<div class="card-label">outside work</div>
 			<div class="card-val">
-				Video games, personal projects, and the occasional trip down an astronomy rabbit hole just to remember where I came from.
+				Video games, personal projects, and the occasional trip down an astronomy rabbit hole just
+				to remember where I came from.
 			</div>
 		</div>
 		<div class="card">
 			<div class="card-label">this site</div>
 			<div class="card-val">
-				Fast to load, minimal by design. Utilities I reach for occasionally, experiments in frontend development, and the rare post.
+				Fast to load, minimal by design. Utilities I reach for occasionally, experiments in frontend
+				development, and the rare post.
 			</div>
 		</div>
 	</div>
@@ -127,8 +157,12 @@
 		margin-bottom: 0;
 	}
 
-	.tag  { color: var(--accent2); }
-	.sep  { color: var(--dim); }
+	.tag {
+		color: var(--accent2);
+	}
+	.sep {
+		color: var(--dim);
+	}
 
 	.hero-cta {
 		margin-top: 36px;
@@ -161,9 +195,15 @@
 		border-radius: 50%;
 	}
 
-	.dot-red    { background: #f78166; }
-	.dot-yellow { background: #e3b341; }
-	.dot-green  { background: var(--accent); }
+	.dot-red {
+		background: #f78166;
+	}
+	.dot-yellow {
+		background: #e3b341;
+	}
+	.dot-green {
+		background: var(--accent);
+	}
 
 	.terminal-title {
 		margin-left: 6px;
@@ -178,14 +218,37 @@
 		line-height: 1.9;
 	}
 
-	.t-line    { display: flex; flex-wrap: wrap; align-items: center; }
-	.t-prompt  { color: var(--accent); user-select: none; white-space: pre; }
-	.t-cmd     { color: var(--bright); }
-	.t-val     { color: var(--accent3); }
-	.t-out     { color: var(--text); display: block; margin: 2px 0; }
-	.t-blank   { display: block; height: 10px; }
-	.t-key     { color: var(--accent2); }
-	.t-string  { color: var(--accent3); }
+	.t-line {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+	}
+	.t-prompt {
+		color: var(--accent);
+		user-select: none;
+		white-space: pre;
+	}
+	.t-cmd {
+		color: var(--bright);
+	}
+	.t-val {
+		color: var(--accent3);
+	}
+	.t-out {
+		color: var(--text);
+		display: block;
+		margin: 2px 0;
+	}
+	.t-blank {
+		display: block;
+		height: 10px;
+	}
+	.t-key {
+		color: var(--accent2);
+	}
+	.t-string {
+		color: var(--accent3);
+	}
 
 	.t-link {
 		color: var(--accent2);
@@ -194,7 +257,9 @@
 		transition: border-color 0.15s;
 	}
 
-	.t-link:hover { border-color: var(--accent2); }
+	.t-link:hover {
+		border-color: var(--accent2);
+	}
 
 	.cursor {
 		display: inline-block;
@@ -207,8 +272,13 @@
 	}
 
 	@keyframes blink {
-		0%, 100% { opacity: 1; }
-		50%       { opacity: 0; }
+		0%,
+		100% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0;
+		}
 	}
 
 	/* About */
@@ -224,7 +294,9 @@
 	}
 
 	@media (max-width: 600px) {
-		.about-grid { grid-template-columns: 1fr; }
+		.about-grid {
+			grid-template-columns: 1fr;
+		}
 	}
 
 	.card-label {
