@@ -96,8 +96,8 @@
 	function describeMove(m: number): string {
 		const face = FACE_WORDS[Math.floor(m / 3)];
 		const power = m % 3;
-		if (power === 1) return `turn the ${face} face half a turn`;
-		return `turn the ${face} face ${power === 0 ? 'clockwise' : 'counter-clockwise'}`;
+		if (power === 1) return `turn the ${face} face a quarter turn twice (either way)`;
+		return `turn the ${face} face a quarter turn ${power === 0 ? 'clockwise' : 'counter-clockwise'}`;
 	}
 </script>
 
@@ -226,7 +226,7 @@
 				<li>
 					A letter alone means turn that face a quarter turn clockwise, as seen looking at it.
 				</li>
-				<li>' (prime) means counter-clockwise; 2 means half a turn.</li>
+				<li>' (prime) means counter-clockwise; 2 means two quarter turns.</li>
 				<li>Keep holding the cube the same way (white top, green front) the whole time.</li>
 			</ul>
 		</details>

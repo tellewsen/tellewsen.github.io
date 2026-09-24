@@ -13,7 +13,7 @@
 // surfaces as in the solved puzzle, which is weaker than the underlying
 // 3x3 being solved.
 
-import { type CubieCube, cloneCube, permutationParity, CORNER_NAMES, EDGE_NAMES } from './cubie';
+import { type CubieCube, cloneCube, permutationParity } from './cubie';
 import {
 	type Vec,
 	type Mat,
@@ -31,7 +31,6 @@ import {
 	unit,
 	norm
 } from './geometry';
-import { slotName } from './facelet';
 
 /** Outward normals of the tetrahedron's faces; index = colour. */
 export const TETRA_NORMALS: Vec[] = [
@@ -134,10 +133,21 @@ export function pieceKind(home: number): PieceKind {
 	return kind;
 }
 
+/**
+ * What people holding the puzzle call each kind. The 3x3 names don't fit:
+ * the 3x3 centers are the two-colour pieces along the tetrahedron's edges.
+ */
+export const KIND_NAMES: Record<PieceKind, string> = {
+	tip: 'tip',
+	triangle: 'face center',
+	edge: 'side piece',
+	center: 'edge'
+};
+
 export function pieceName(home: number, colorNames: string[]): string {
 	return `${pieceColors(home)
 		.map((c) => colorNames[c])
-		.join('-')} ${pieceKind(home)}`;
+		.join('-')} ${KIND_NAMES[pieceKind(home)]}`;
 }
 
 /** The colour group of an edge piece (edges within a group look identical). */
@@ -208,12 +218,6 @@ export function setCorner(cube: CubieCube, slot: number, piece: number): CubieCu
 	return c;
 }
 
-export function twistCorner(cube: CubieCube, slot: number): CubieCube {
-	const c = cloneCube(cube);
-	c.co[slot] = (c.co[slot] + 1) % 3;
-	return c;
-}
-
 export function setEdgeColor(cube: CubieCube, slot: number, group: number): CubieCube {
 	const c = cloneCube(cube);
 	c.ep[slot - EDGE_SLOT] = EDGE_GROUPS[group][0];
@@ -233,6 +237,51 @@ export function turnCenter(cube: CubieCube, slot: number): CubieCube {
 	return c;
 }
 
+/**
+ * Every distinct way `slot` can look, as edits of `cube` that change only
+ * that slot, in a fixed order. Lets the user pick what they see
+ * instead of reasoning about piece identities and orientations.
+ */
+export function slotOptions(cube: CubieCube, slot: number): CubieCube[] {
+	const trials: CubieCube[] = [];
+	const kind = slotKind(slot);
+	if (kind === 'corner') {
+		for (let j = 0; j < 8; j++) {
+			for (let t = 0; t < 3; t++) {
+				const c = setCorner(cube, slot, j);
+				c.co[slot] = t;
+				trials.push(c);
+			}
+		}
+	} else if (kind === 'edge') {
+		const i = slot - EDGE_SLOT;
+		EDGE_GROUPS.forEach((members, g) => {
+			// Keep the current piece when only the flip changes, so a pick
+			// doesn't needlessly relabel identical-looking edges.
+			const piece = edgeGroup(cube.ep[i]) === g ? cube.ep[i] : members[0];
+			for (let f = 0; f < 2; f++) {
+				const c = cloneCube(cube);
+				c.ep[i] = piece;
+				c.eo[i] = f;
+				trials.push(c);
+			}
+		});
+	} else {
+		for (let t = 0; t < 4; t++) {
+			const c = cloneCube(cube);
+			c.ct[slot - CENTER_SLOT] = t;
+			trials.push(c);
+		}
+	}
+	const seen = new Set<string>();
+	return trials.filter((c) => {
+		const look = slotLook(c, slot);
+		if (seen.has(look)) return false;
+		seen.add(look);
+		return true;
+	});
+}
+
 // --- Checking an entered position ----------------------------------------
 
 export interface MorphixError {
@@ -242,14 +291,6 @@ export interface MorphixError {
 
 export type MorphixCheck =
 	{ ok: true; candidates: CubieCube[] } | { ok: false; errors: MorphixError[] };
-
-/** Where a slot is, e.g. "top-front-right", holding the puzzle as shown. */
-export function slotLabel(slot: number): string {
-	const kind = slotKind(slot);
-	if (kind === 'corner') return slotName(CORNER_NAMES[slot]);
-	if (kind === 'edge') return slotName(EDGE_NAMES[slot - EDGE_SLOT]);
-	return slotName('URFDLB'[slot - CENTER_SLOT]);
-}
 
 const list = (items: string[]) =>
 	items.length <= 1 ? items.join('') : `${items.slice(0, -1).join(', ')} and ${items.at(-1)}`;
@@ -281,7 +322,7 @@ export function checkMorphix(
 		const slots = input.cp.flatMap((p, i) => (p === j ? [i] : []));
 		if (slots.length > 1) {
 			errors.push({
-				message: `The ${name(j)} appears ${slots.length} times: ${list(slots.map(slotLabel))}.`,
+				message: `The ${name(j)} appears ${slots.length} times.`,
 				slots
 			});
 		}
@@ -297,7 +338,7 @@ export function checkMorphix(
 		const slots = input.ep.flatMap((p, i) => (edgeGroup(p) === g ? [i + EDGE_SLOT] : []));
 		if (slots.length !== 3) {
 			errors.push({
-				message: `There are ${slots.length} ${colorNames[g]} edges, expected 3.`,
+				message: `There are ${slots.length} ${colorNames[g]} side pieces, expected 3.`,
 				slots: slots.length > 3 ? slots : []
 			});
 		}
@@ -312,7 +353,7 @@ export function checkMorphix(
 			errors: [
 				{
 					message:
-						'This position cannot be reached by turning: a center is probably a quarter turn off, or two corner pieces are swapped.',
+						'This position cannot be reached by turning: an edge (two-colour piece) is probably a quarter turn off, or two tips or face centers are swapped.',
 					slots: []
 				}
 			]
@@ -360,7 +401,7 @@ export function checkMorphix(
 			errors: [
 				{
 					message:
-						'One edge is flipped — this position cannot be reached by turning. Check which way the edges are tilted.',
+						'One side piece is flipped — this position cannot be reached by turning. Check which way the side pieces are tilted.',
 					slots: []
 				}
 			]

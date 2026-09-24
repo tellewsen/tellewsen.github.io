@@ -72,11 +72,13 @@ describe('solve', () => {
 	it('solves random cubes in few moves', () => {
 		for (let i = 0; i < 20; i++) {
 			const c = randomCube();
-			const solution = solve(c, { timeoutMs: 500 });
+			// Generous budget: the search stops at 20 moves anyway, and under a
+			// busy parallel test run 500 ms sometimes ends at 23.
+			const solution = solve(c, { timeoutMs: 1500 });
 			expect(isSolved(applyMoves(c, solution))).toBe(true);
 			expect(solution.length).toBeLessThanOrEqual(22);
 		}
-	}, 30_000);
+	}, 60_000);
 
 	it('with centers: solves center orientation too', () => {
 		for (let i = 0; i < 10; i++) {

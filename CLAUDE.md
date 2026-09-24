@@ -20,7 +20,7 @@ pnpm test:watch    # Run tests in watch mode
 (e.g. missing new routes).
 
 Test suite: Vitest, covering src/lib/tenk/ and src/lib/cube/ (pure logic)
-plus component tests for /utils/tenk and /utils/cube. No tests exist yet
+plus component tests for /utils/tenk, /utils/cube and /utils/mastermorphix. No tests exist yet
 for other routes/components.
 
 ## Architecture
@@ -44,11 +44,23 @@ This is a **SvelteKit static site** (adapter-static) deployed to GitHub Pages at
   (`src/lib/cube/Cube3D.svelte`), solve with a native TypeScript port of
   Kociemba's two-phase algorithm running in a Web Worker
   (`solver.worker.ts`, tables built on load in ~0.6s). `src/lib/cube/` is
-  layered so shape mods (planned: Mastermorphix) only need a new input
+  layered so shape mods (e.g. the Mastermorphix) only need a new input
   layer: `cubie.ts` models the mechanism (incl. center orientation `ct`,
-  unused by the 3x3 solver), `facelet.ts` is the 3x3 sticker layer,
+  used only with the solver's `centers` option), `facelet.ts` is the 3x3 sticker layer,
   `coord.ts` + `solver.ts` are the search. `cubie.test.ts` checks the move
   tables against an independent geometric sticker-rotation model.
+- `src/routes/utils/mastermorphix/` — Mastermorphix solver, the first shape
+  mod on the `src/lib/cube/` layers. `geometry.ts` gives each slot's
+  position and each piece's rigid rotation; `morphix.ts` builds piece shapes
+  as 3x3 cells clipped by a tetrahedron and compares positions by *look*
+  (`slotLook`), since identical-looking pieces (same-colour side pieces,
+  triangle twists) can't be told apart. `checkMorphix` turns an entered look
+  into reachable 3x3 candidates; `solver.ts` with `centers: true` also solves
+  center orientation (the 2-colour "edges" on the puzzle are 3x3 centers).
+  Entry is by picking from `slotOptions` thumbnails (`Morphix3D` with
+  `only`). `solverClient.ts` (worker wrapper) and `SolutionSteps.svelte`
+  are shared with the cube page. UI text uses puzzle-holder names: tip,
+  face center, edge (2-colour), side piece (1-colour) — see `KIND_NAMES`.
 - `src/routes/about/` — empty directory (about page not yet created)
 
 ### Blog post pattern

@@ -17,6 +17,7 @@ import {
 	EDGE_SLOT,
 	CENTER_SLOT,
 	SLOT_POSITIONS,
+	slotKind,
 	pieceAt,
 	faceTurn,
 	matMul,
@@ -35,6 +36,7 @@ import {
 	looksSolved,
 	looksSame,
 	checkMorphix,
+	slotOptions,
 	setCorner,
 	setEdgeColor,
 	turnCenter,
@@ -107,7 +109,7 @@ describe('Mastermorphix shapes', () => {
 		}
 		expect(EDGE_GROUPS.map((g) => g.length)).toEqual([3, 3, 3, 3]);
 		expect(pieceName(0, NAMES)).toBe('yellow-green-blue tip'); // URF
-		expect(pieceName(CENTER_SLOT, NAMES)).toBe('yellow-blue center'); // U
+		expect(pieceName(CENTER_SLOT, NAMES)).toBe('yellow-blue edge'); // U
 	});
 
 	it('pieces fill the tetrahedron exactly (plus the hidden core)', () => {
@@ -139,6 +141,24 @@ describe('Mastermorphix shapes', () => {
 			expect(looks((c, v) => (c.co[i] = v), i, 3)).toBe(expected);
 		}
 		for (let i = 0; i < 12; i++) expect(looks((c, v) => (c.eo[i] = v), i + EDGE_SLOT, 2)).toBe(2);
+	});
+
+	it('offers every distinct look of a slot, changing nothing else', () => {
+		const cube = randomCube(Math.random, true);
+		for (let s = 0; s < N_SLOTS; s++) {
+			const options = slotOptions(cube, s);
+			// Corner spot: 4 tips x 3 twists + 4 face centers; side piece: 4
+			// colours x 2 flips; edge: 4 turns.
+			expect(options).toHaveLength({ corner: 16, edge: 8, center: 4 }[slotKind(s)]);
+			const looks = options.map((o) => slotLook(o, s));
+			expect(new Set(looks).size).toBe(options.length);
+			expect(looks).toContain(slotLook(cube, s));
+			for (const o of options) {
+				for (let t = 0; t < N_SLOTS; t++) {
+					if (t !== s) expect(slotLook(o, t)).toBe(slotLook(cube, t));
+				}
+			}
+		}
 	});
 
 	it('edges of the same colour look identical in any slot', () => {
@@ -217,7 +237,7 @@ describe('checkMorphix', () => {
 		expect(r.ok).toBe(false);
 		if (!r.ok) {
 			expect(r.errors.map((e) => e.message)).toEqual([
-				'The yellow-green-blue tip appears 2 times: top-front-right and top-front-left.',
+				'The yellow-green-blue tip appears 2 times.',
 				`Missing: the ${pieceName(1, NAMES)}.`
 			]);
 			expect(r.errors[0].slots).toEqual([0, 1]);
@@ -230,8 +250,8 @@ describe('checkMorphix', () => {
 		expect(r.ok).toBe(false);
 		if (!r.ok) {
 			const messages = r.errors.map((e) => e.message);
-			expect(messages).toContain(`There are 2 ${NAMES[edgeGroup(0)]} edges, expected 3.`);
-			expect(messages).toContain(`There are 4 ${NAMES[other]} edges, expected 3.`);
+			expect(messages).toContain(`There are 2 ${NAMES[edgeGroup(0)]} side pieces, expected 3.`);
+			expect(messages).toContain(`There are 4 ${NAMES[other]} side pieces, expected 3.`);
 		}
 	});
 
@@ -239,7 +259,7 @@ describe('checkMorphix', () => {
 		const r1 = checkMorphix(turnCenter(solvedCube(), CENTER_SLOT), NAMES);
 		expect(!r1.ok && r1.errors[0].message).toMatch(/quarter turn off/);
 		const r2 = checkMorphix(flipEdge(solvedCube(), EDGE_SLOT), NAMES);
-		expect(!r2.ok && r2.errors[0].message).toMatch(/edge is flipped/);
+		expect(!r2.ok && r2.errors[0].message).toMatch(/side piece is flipped/);
 	});
 });
 

@@ -1,7 +1,8 @@
 <script lang="ts">
 	// CSS-3D view of a Mastermorphix position: every face of every piece is a
 	// clipped, transformed div. Drag to rotate the view; click a piece to
-	// select it.
+	// select it. With `only`, draws just that slot's piece, centred and
+	// static, as a thumbnail.
 	import { createEventDispatcher } from 'svelte';
 	import type { CubieCube } from './cubie';
 	import {
@@ -25,10 +26,13 @@
 	export let highlight: number[] = [];
 	export let rx = -15;
 	export let ry = 0;
+	export let only: number | null = null;
+	/** Pixels per unit (a 3x3 cell is one unit). */
+	export let px = 40;
+	export let size = 320;
 
 	const dispatch = createEventDispatcher<{ select: number }>();
 
-	const PX = 40; // pixels per unit (a 3x3 cell is one unit)
 	const LIGHT = unit([0.35, 0.8, 0.5]);
 	const GAP = 0.95; // pieces shrunk a little so their edges show
 	const LETTERS = 'URFDLB';
@@ -51,17 +55,18 @@
 	}
 
 	// World (x right, y up, z towards viewer) to CSS (y down) pixels.
-	const toCss = (v: Vec): Vec => [v[0] * PX, -v[1] * PX, v[2] * PX];
+	const toCss = (v: Vec, px: number): Vec => [v[0] * px, -v[1] * px, v[2] * px];
 
 	function cssFace(
 		p: Polygon,
 		slot: number,
 		index: number,
 		label: string | null,
-		palette: string[]
+		palette: string[],
+		px: number
 	): Face {
-		const pts = p.vertices.map(toCss);
-		const n = unit(toCss(p.normal));
+		const pts = p.vertices.map((v) => toCss(v, px));
+		const n = unit(toCss(p.normal, px));
 		const e1 = unit(add(pts[1], pts[0], -1));
 		const e2 = cross(n, e1);
 		const local = pts.map((q) => {
@@ -89,17 +94,27 @@
 		};
 	}
 
-	function buildFaces(cube: CubieCube, selected: number | null, colors: string[]): Face[] {
+	function buildFaces(
+		cube: CubieCube,
+		selected: number | null,
+		colors: string[],
+		only: number | null,
+		px: number
+	): Face[] {
 		const faces: Face[] = [];
-		for (let slot = 0; slot < N_SLOTS; slot++) {
+		for (let slot = only ?? 0; slot < (only === null ? N_SLOTS : only + 1); slot++) {
 			const { polygons } = piecePolygons(cube, slot);
 			const all = polygons.flatMap((p) => p.vertices);
 			const centroid = scale(
 				all.reduce<Vec>((s, v) => add(s, v), [0, 0, 0]),
 				1 / all.length
 			);
-			const offset =
-				slot === selected ? scale(unit(SLOT_POSITIONS[slot]), 0.45) : ([0, 0, 0] as Vec);
+			const offset: Vec =
+				only !== null
+					? scale(centroid, -1)
+					: slot === selected
+						? scale(unit(SLOT_POSITIONS[slot]), 0.45)
+						: [0, 0, 0];
 			let labelled = slot < CENTER_SLOT;
 			polygons.forEach((p, i) => {
 				const moved: Polygon = {
@@ -111,18 +126,19 @@
 				// Notation letter on one coloured half of each center.
 				const label = !labelled && p.color !== null ? LETTERS[slot - CENTER_SLOT] : null;
 				if (label) labelled = true;
-				faces.push(cssFace(moved, slot, i, label, colors));
+				faces.push(cssFace(moved, slot, i, only === null ? label : null, colors, px));
 			});
 		}
 		return faces;
 	}
 
-	$: faces = buildFaces(cube, selected, colors);
+	$: faces = buildFaces(cube, selected, colors, only, px);
 
 	let dragStart: { x: number; y: number; rx: number; ry: number } | null = null;
 	let dragged = false;
 
 	function onPointerDown(e: PointerEvent) {
+		if (only !== null) return;
 		dragStart = { x: e.clientX, y: e.clientY, rx, ry };
 		dragged = false;
 		window.addEventListener('pointermove', onPointerMove);
@@ -149,11 +165,20 @@
 	}
 </script>
 
-<div class="scene" on:pointerdown={onPointerDown} role="presentation">
+<div
+	class="scene"
+	class:thumb={only !== null}
+	style:width="{size}px"
+	style:height="{size}px"
+	on:pointerdown={onPointerDown}
+	role="presentation"
+>
 	<div class="puzzle" style="transform: rotateX({rx}deg) rotateY({ry}deg)">
 		{#each faces as f (f.key)}
-			<button
-				type="button"
+			<!-- Thumbnails sit inside a button, and buttons can't nest. -->
+			<svelte:element
+				this={only === null ? 'button' : 'div'}
+				type={only === null ? 'button' : undefined}
 				class="face"
 				class:flagged={highlight.includes(f.slot)}
 				class:selected={f.slot === selected}
@@ -162,7 +187,8 @@
 				style:transform={f.transform}
 				style:clip-path={f.clip}
 				style:background={f.color}
-				disabled={!editable}
+				disabled={only === null ? !editable : undefined}
+				data-slot={f.slot}
 				tabindex="-1"
 				aria-hidden="true"
 				on:click={() => onFaceClick(f.slot)}
@@ -172,21 +198,24 @@
 						>{f.label.text}</span
 					>
 				{/if}
-			</button>
+			</svelte:element>
 		{/each}
 	</div>
 </div>
 
 <style>
 	.scene {
-		width: 320px;
-		height: 320px;
 		margin: 20px auto;
 		perspective: 1000px;
 		touch-action: none;
 		cursor: grab;
 		user-select: none;
 		position: relative;
+	}
+	.scene.thumb {
+		margin: 0;
+		cursor: inherit;
+		pointer-events: none;
 	}
 	.puzzle {
 		position: absolute;

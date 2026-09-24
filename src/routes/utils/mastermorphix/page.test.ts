@@ -1,43 +1,49 @@
 // @vitest-environment jsdom
 import { describe, it, expect } from 'vitest';
 import { render, fireEvent, screen } from '@testing-library/svelte';
+import { CENTER_SLOT } from '$lib/cube/geometry';
 import Page from './+page.svelte';
 
-async function selectPiece(name: string) {
-	const select = screen.getByLabelText('Selected piece') as HTMLSelectElement;
-	const option = [...select.options].find((o) => o.textContent === name)!;
-	await fireEvent.change(select, { target: { value: option.value } });
+async function clickPiece(container: HTMLElement, slot: number) {
+	await fireEvent.click(container.querySelector(`button[data-slot="${slot}"]`)!);
 }
+
+const TOP_EDGE = CENTER_SLOT; // the two-colour piece on top (3x3 U center)
 
 describe('/utils/mastermorphix page', () => {
 	it('tells you how to hold the puzzle, using the chosen colours', () => {
 		render(Page);
-		expect(screen.getByText('yellow-blue')).toBeInTheDocument(); // top center
-		expect(screen.getByText('yellow-green')).toBeInTheDocument(); // front center
+		expect(screen.getByText('yellow-blue')).toBeInTheDocument(); // top edge
+		expect(screen.getByText('yellow-green')).toBeInTheDocument(); // front edge
 	});
 
-	it('reports a duplicated piece after changing a corner', async () => {
-		render(Page);
-		await selectPiece('top-front-left corner');
-		expect(screen.getByText(/holds the/).textContent).toMatch(/triangle/);
-		await fireEvent.click(screen.getByRole('button', { name: 'yellow-green-blue tip' }));
-		expect(
-			screen.getByText('The yellow-green-blue tip appears 2 times: top-front-right and top-front-left.')
-		).toBeInTheDocument();
+	it('offers every look of the clicked spot, with the current one marked', async () => {
+		const { container } = render(Page);
+		await clickPiece(container, 1); // a face-center spot
+		const options = container.querySelectorAll('.option');
+		expect(options).toHaveLength(16);
+		const active = screen.getByRole('button', { pressed: true });
+		expect(active.getAttribute('aria-label')).toMatch(/face center$/);
 	});
 
-	it('explains that a lone quarter-turned center is impossible', async () => {
-		render(Page);
-		await selectPiece('top center');
-		await fireEvent.click(screen.getByRole('button', { name: 'Turn' }));
-		expect(screen.getByText(/a center is probably a quarter turn off/)).toBeInTheDocument();
+	it('reports a duplicated piece after picking a tip for a second spot', async () => {
+		const { container } = render(Page);
+		await clickPiece(container, 1);
+		await fireEvent.click(screen.getByRole('button', { name: 'yellow-green-blue tip, way 1' }));
+		expect(screen.getByText('The yellow-green-blue tip appears 2 times.')).toBeInTheDocument();
 	});
 
-	it('solves a half-turned center', async () => {
-		render(Page);
-		await selectPiece('top center');
-		await fireEvent.click(screen.getByRole('button', { name: 'Turn' }));
-		await fireEvent.click(screen.getByRole('button', { name: 'Turn' }));
+	it('explains that a lone quarter-turned edge is impossible', async () => {
+		const { container } = render(Page);
+		await clickPiece(container, TOP_EDGE);
+		await fireEvent.click(screen.getByRole('button', { name: 'yellow-blue edge, way 2' }));
+		expect(screen.getByText(/is probably a quarter turn off/)).toBeInTheDocument();
+	});
+
+	it('solves a half-turned edge', async () => {
+		const { container } = render(Page);
+		await clickPiece(container, TOP_EDGE);
+		await fireEvent.click(screen.getByRole('button', { name: 'yellow-blue edge, way 3' }));
 		await fireEvent.click(await screen.findByRole('button', { name: 'Solve' }));
 		await screen.findByText(/moves\./, {}, { timeout: 30_000 });
 		await fireEvent.click(screen.getByRole('button', { name: '⏭' }));

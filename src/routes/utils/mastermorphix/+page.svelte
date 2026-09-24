@@ -3,20 +3,8 @@
 	import Morphix3D from '$lib/cube/Morphix3D.svelte';
 	import SolutionSteps from '$lib/cube/SolutionSteps.svelte';
 	import { type CubieCube, applyMoves, randomCube, solvedCube } from '$lib/cube/cubie';
-	import { N_SLOTS, EDGE_SLOT, CENTER_SLOT, slotKind, pieceAt } from '$lib/cube/geometry';
-	import {
-		checkMorphix,
-		pieceColors,
-		pieceKind,
-		pieceName,
-		slotLabel,
-		setCorner,
-		twistCorner,
-		setEdgeColor,
-		flipEdge,
-		turnCenter,
-		edgeGroup
-	} from '$lib/cube/morphix';
+	import { CENTER_SLOT, SLOT_POSITIONS, pieceAt, slotKind } from '$lib/cube/geometry';
+	import { checkMorphix, pieceColors, pieceName, slotLook, slotOptions } from '$lib/cube/morphix';
 	import { createSolverClient, type SolverClient } from '$lib/cube/solverClient';
 
 	const PRESETS: Record<string, string> = {
@@ -34,6 +22,8 @@
 	};
 	const STORAGE_KEY = 'mastermorphix-colors';
 	const LAYER_WORDS = ['top', 'right', 'front', 'bottom', 'left', 'back'];
+	// Tips are much bigger than the other pieces; scale thumbnails to fit.
+	const THUMB_PX = { corner: 24, edge: 36, center: 48 };
 
 	let colorNames = ['red', 'yellow', 'green', 'blue'];
 	$: colors = colorNames.map((n) => PRESETS[n]);
@@ -61,6 +51,10 @@
 			? errors[focusedError].slots
 			: errors.flatMap((e) => e.slots);
 	$: shown = solution ? applyMoves(solution.start, solution.moves.slice(0, step)) : cube;
+	$: options = selected === null ? [] : slotOptions(cube, selected);
+	$: currentLook = selected === null ? '' : slotLook(cube, selected);
+	$: optionLabels = labelOptions(options, selected, colorNames);
+	$: optionView = selected === null ? { rx: 0, ry: 0 } : outsideView(selected);
 	$: centerName = (face: number) =>
 		pieceColors(CENTER_SLOT + face)
 			.map((c) => colorNames[c])
@@ -122,15 +116,32 @@
 		step = 0;
 	}
 
-	function describeMove(m: number): string {
-		const face = Math.floor(m / 3);
-		const layer = `${LAYER_WORDS[face]} layer (${centerName(face)} center)`;
-		const power = m % 3;
-		if (power === 1) return `turn the ${layer} half a turn`;
-		return `turn the ${layer} ${power === 0 ? 'clockwise' : 'counter-clockwise'}, looking at that center`;
+	// View angles that look straight at a slot from outside (front kept
+	// downwards when looking at the top), so every coloured side it can show
+	// is visible, whatever the main view is.
+	function outsideView(slot: number): { rx: number; ry: number } {
+		const [x, y, z] = SLOT_POSITIONS[slot];
+		const deg = 180 / Math.PI;
+		return { rx: -Math.atan2(y, Math.hypot(x, z)) * deg, ry: -Math.atan2(x, z) * deg };
 	}
 
-	const slotTitle = (slot: number) => `${slotLabel(slot)} ${slotKind(slot)}`;
+	// "red tip", or "red tip, way 2" when one piece fits a spot several ways.
+	function labelOptions(options: CubieCube[], slot: number | null, names: string[]): string[] {
+		if (slot === null) return [];
+		const bases = options.map((o) => pieceName(pieceAt(o, slot).home, names));
+		return bases.map((b, k) => {
+			const same = bases.filter((x) => x === b).length;
+			return same > 1 ? `${b}, way ${bases.slice(0, k + 1).filter((x) => x === b).length}` : b;
+		});
+	}
+
+	function describeMove(m: number): string {
+		const face = Math.floor(m / 3);
+		const layer = `${LAYER_WORDS[face]} layer (${centerName(face)} edge)`;
+		const power = m % 3;
+		if (power === 1) return `turn the ${layer} a quarter turn twice (either way)`;
+		return `turn the ${layer} a quarter turn ${power === 0 ? 'clockwise' : 'counter-clockwise'}, looking at that edge`;
+	}
 </script>
 
 <svelte:head>
@@ -142,10 +153,14 @@
 
 	<p class="intro">
 		Mastermorphix solver. It turns like a 3x3 <a href="/utils/cube">Rubik's cube</a>, just with a
-		different shape. Hold yours with the <strong>{centerName(0)}</strong> center on top and the
-		<strong>{centerName(2)}</strong> center facing you (centers never move, so this fixes which way is
-		which). Then click each piece on the model and change it until the model matches your puzzle. Drag
-		the model to see the other sides.
+		different shape. Hold yours with the <strong>{centerName(0)}</strong> edge on top and the
+		<strong>{centerName(2)}</strong> edge facing you. The two-colour edges never leave their place,
+		they only rotate, so this fixes which way is which.
+	</p>
+	<p class="intro">
+		Then click each piece on the model and pick what that spot looks like on your puzzle. Pieces do
+		move around: a tip spot can hold any tip or a flat face center, and side pieces swap with each
+		other. Drag the model to see the other sides.
 	</p>
 
 	<div class="card colors-card">
@@ -200,80 +215,37 @@
 
 	{#if !solution}
 		<div class="card edit-card">
-			<label class="hint">
-				Piece:
-				<select
-					aria-label="Selected piece"
-					value={selected ?? ''}
-					on:change={(e) =>
-						(selected = e.currentTarget.value === '' ? null : Number(e.currentTarget.value))}
-				>
-					<option value="">— click a piece on the model —</option>
-					{#each Array(N_SLOTS) as _, slot}
-						<option value={slot}>{slotTitle(slot)}</option>
-					{/each}
-				</select>
-			</label>
-
-			{#if selected !== null}
-				{@const home = pieceAt(cube, selected).home}
-				{@const kind = slotKind(selected)}
+			{#if selected === null}
+				<p class="hint">Click a piece on the model to change it.</p>
+			{:else}
 				<p class="hint">
-					The {slotTitle(selected)} holds the <strong>{pieceName(home, colorNames)}</strong>.
+					Now <strong>{pieceName(pieceAt(cube, selected).home, colorNames)}</strong>. Pick the one
+					that looks like this spot on your puzzle, looking straight at it from outside:
 				</p>
-				{#if kind === 'corner'}
-					<div class="row">
-						{#each Array(8) as _, j}
-							<button
-								type="button"
-								class="piece-btn"
-								class:piece-active={cube.cp[selected] === j}
-								aria-label={pieceName(j, colorNames)}
-								aria-pressed={cube.cp[selected] === j}
-								on:click={() => selected !== null && edit(setCorner(cube, selected, j))}
-							>
-								{#each pieceColors(j) as c}
-									<span class="swatch" style:background={colors[c]}></span>
-								{/each}
-							</button>
-						{/each}
-					</div>
-					{#if pieceKind(cube.cp[selected]) === 'tip'}
+				<div class="options">
+					{#each options as option, k}
+						{@const active = slotLook(option, selected) === currentLook}
 						<button
 							type="button"
-							class="btn btn-secondary"
-							on:click={() => selected !== null && edit(twistCorner(cube, selected))}>Twist</button
+							class="option"
+							class:option-active={active}
+							aria-label={optionLabels[k]}
+							aria-pressed={active}
+							title={optionLabels[k]}
+							on:click={() => edit(option)}
 						>
-					{:else}
-						<p class="hint">Triangles look the same however they're twisted.</p>
-					{/if}
-				{:else if kind === 'edge'}
-					<div class="row">
-						{#each colorNames as name, g}
-							<button
-								type="button"
-								class="piece-btn"
-								class:piece-active={edgeGroup(cube.ep[selected - EDGE_SLOT]) === g}
-								aria-label="{name} edge"
-								aria-pressed={edgeGroup(cube.ep[selected - EDGE_SLOT]) === g}
-								on:click={() => selected !== null && edit(setEdgeColor(cube, selected, g))}
-							>
-								<span class="swatch" style:background={colors[g]}></span>
-							</button>
-						{/each}
-					</div>
-					<button
-						type="button"
-						class="btn btn-secondary"
-						on:click={() => selected !== null && edit(flipEdge(cube, selected))}>Flip</button
-					>
-				{:else}
-					<button
-						type="button"
-						class="btn btn-secondary"
-						on:click={() => selected !== null && edit(turnCenter(cube, selected))}>Turn</button
-					>
-				{/if}
+							<Morphix3D
+								cube={option}
+								{colors}
+								only={selected}
+								rx={optionView.rx}
+								ry={optionView.ry}
+								px={THUMB_PX[slotKind(selected)]}
+								size={88}
+							/>
+						</button>
+					{/each}
+				</div>
 			{/if}
 		</div>
 	{/if}
@@ -318,11 +290,11 @@
 			<summary>Move notation</summary>
 			<ul class="rules-list">
 				<li>
-					Each letter names a layer by its center: U (top), D (bottom), F (front), B (back), R
-					(right), L (left). The letters are shown on the model's centers.
+					Each letter names a layer by its two-colour edge: U (top), D (bottom), F (front), B (back), R
+					(right), L (left). The letters are shown on the model's edges.
 				</li>
-				<li>A letter alone means a quarter turn clockwise, as seen looking at that center.</li>
-				<li>' (prime) means counter-clockwise; 2 means half a turn.</li>
+				<li>A letter alone means a quarter turn clockwise, as seen looking at that edge.</li>
+				<li>' (prime) means counter-clockwise; 2 means two quarter turns.</li>
 				<li>
 					Keep holding the puzzle the same way the whole time — it will change shape as you turn.
 				</li>
@@ -372,23 +344,24 @@
 	.row:last-child {
 		margin-bottom: 0;
 	}
-	.piece-btn {
-		display: inline-flex;
-		gap: 2px;
-		padding: 5px;
-		background: transparent;
+	.options {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+	.option {
+		padding: 0;
+		background: var(--bg);
 		border: 2px solid var(--border);
 		border-radius: 6px;
 		cursor: pointer;
 	}
-	.piece-active {
-		border-color: var(--accent);
+	.option:hover {
+		border-color: var(--muted);
 	}
-	.swatch {
-		display: inline-block;
-		width: 16px;
-		height: 16px;
-		border-radius: 3px;
+	.option-active,
+	.option-active:hover {
+		border-color: var(--accent);
 	}
 	.btn:disabled {
 		opacity: 0.5;
