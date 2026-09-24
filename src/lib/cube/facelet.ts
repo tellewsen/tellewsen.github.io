@@ -12,7 +12,18 @@
 // colour (0..5), or null if not painted yet. Centers are fixed (face turns
 // never move them), so the center colours define the scheme.
 
-import { type CubieCube, CORNER_NAMES, EDGE_NAMES, permutationParity, U, R, F, D, L, B } from './cubie';
+import {
+	type CubieCube,
+	CORNER_NAMES,
+	EDGE_NAMES,
+	permutationParity,
+	U,
+	R,
+	F,
+	D,
+	L,
+	B
+} from './cubie';
 
 export type Facelets = (number | null)[];
 
@@ -95,84 +106,166 @@ export function toFacelets(c: CubieCube): number[] {
 	return out;
 }
 
-export type ParseResult = { ok: true; cube: CubieCube } | { ok: false; errors: string[] };
+/** A problem with a painted cube, and the stickers it concerns (may be empty). */
+export interface CubeError {
+	message: string;
+	facelets: number[];
+}
+
+export type ParseResult = { ok: true; cube: CubieCube } | { ok: false; errors: CubeError[] };
 
 const colorList = (cols: number[]) => cols.map((c) => COLOR_NAMES[c]).join('-');
 
+const POSITION_WORDS: Record<string, string> = {
+	U: 'top',
+	D: 'bottom',
+	F: 'front',
+	B: 'back',
+	L: 'left',
+	R: 'right'
+};
+const POSITION_ORDER = 'UDFBLR';
+
+/** "URF" -> "top-front-right", as seen holding the cube white top, green front. */
+function slotName(letters: string): string {
+	return [...letters]
+		.sort((a, b) => POSITION_ORDER.indexOf(a) - POSITION_ORDER.indexOf(b))
+		.map((l) => POSITION_WORDS[l])
+		.join('-');
+}
+
+const list = (items: string[]) =>
+	items.length <= 1 ? items.join('') : `${items.slice(0, -1).join(', ')} and ${items.at(-1)}`;
+
+/**
+ * Identify which piece sits in each slot. `pieces[i]` is the piece index or
+ * -1 if the colours in slot i match no piece. Reports impossible colour
+ * combinations, duplicated pieces (with every slot holding a copy) and
+ * missing pieces, so a wrongly painted sticker can be tracked down.
+ */
+function identifyPieces(
+	kind: 'corner' | 'edge',
+	slotFacelets: number[][],
+	pieceColors: number[][],
+	slotNames: string[],
+	fc: number[],
+	identify: (cols: number[]) => { piece: number; ori: number }
+): { pieces: number[]; oris: number[]; errors: CubeError[] } {
+	const errors: CubeError[] = [];
+	const pieces: number[] = [];
+	const oris: number[] = [];
+	slotFacelets.forEach((idxs, i) => {
+		const cols = idxs.map((idx) => fc[idx]);
+		const { piece, ori } = identify(cols);
+		pieces.push(piece);
+		oris.push(ori);
+		if (piece < 0) {
+			errors.push({
+				message: `The ${slotName(slotNames[i])} ${kind} is ${colorList(cols)}, but no ${kind} has those colours.`,
+				facelets: idxs
+			});
+		}
+	});
+	pieceColors.forEach((cols, j) => {
+		const slots = pieces.flatMap((p, i) => (p === j ? [i] : []));
+		if (slots.length > 1) {
+			errors.push({
+				message: `The ${colorList(cols)} ${kind} appears ${slots.length} times: ${list(slots.map((i) => slotName(slotNames[i])))}.`,
+				facelets: slots.flatMap((i) => slotFacelets[i])
+			});
+		}
+	});
+	const missing = pieceColors.flatMap((cols, j) => (pieces.includes(j) ? [] : [colorList(cols)]));
+	if (missing.length) {
+		errors.push({
+			message: `Missing ${kind}${missing.length === 1 ? '' : 's'}: ${list(missing)}.`,
+			facelets: []
+		});
+	}
+	return { pieces, oris, errors };
+}
+
 /**
  * Read a painted cube. Errors are phrased for someone holding a physical
- * cube — most mean a sticker was painted wrong, the last three mean the
+ * cube: most mean a sticker was painted wrong, the last three mean the
  * cube was taken apart and reassembled (or a sticker is misplaced).
  */
 export function fromFacelets(facelets: Facelets): ParseResult {
 	const unpainted = facelets.filter((c) => c === null).length;
 	if (unpainted > 0) {
-		return { ok: false, errors: [`${unpainted} sticker${unpainted === 1 ? '' : 's'} left to paint.`] };
+		return {
+			ok: false,
+			errors: [
+				{
+					message: `${unpainted} sticker${unpainted === 1 ? '' : 's'} left to paint.`,
+					facelets: []
+				}
+			]
+		};
 	}
 	const fc = facelets as number[];
-	const errors: string[] = [];
+	const errors: CubeError[] = [];
 
 	for (let face = 0; face < 6; face++) {
-		if (fc[face * 9 + 4] !== face) errors.push('Center stickers must keep their colours.');
+		if (fc[face * 9 + 4] !== face) {
+			errors.push({
+				message: 'Center stickers must keep their colours.',
+				facelets: [face * 9 + 4]
+			});
+		}
 	}
 	const counts = [0, 0, 0, 0, 0, 0];
 	fc.forEach((c) => counts[c]++);
 	counts.forEach((n, c) => {
-		if (n !== 9) errors.push(`There are ${n} ${COLOR_NAMES[c]} stickers, expected 9.`);
-	});
-	if (errors.length) return { ok: false, errors };
-
-	const cp = new Array(8).fill(-1);
-	const co = new Array(8).fill(0);
-	for (let i = 0; i < 8; i++) {
-		const cols = CORNER_FACELETS[i].map((idx) => fc[idx]);
-		const ori = cols.findIndex((c) => c === U || c === D);
-		const j =
-			ori < 0
-				? -1
-				: CORNER_COLORS.findIndex(
-						(cc) =>
-							cc[0] === cols[ori] && cc[1] === cols[(ori + 1) % 3] && cc[2] === cols[(ori + 2) % 3]
-					);
-		if (j < 0) {
-			errors.push(`No corner has the colours ${colorList(cols)} (at ${CORNER_NAMES[i]}).`);
-		} else {
-			cp[i] = j;
-			co[i] = ori;
+		if (n !== 9) {
+			errors.push({
+				message: `There are ${n} ${COLOR_NAMES[c]} stickers, expected 9.`,
+				facelets: []
+			});
 		}
-	}
-	const ep = new Array(12).fill(-1);
-	const eo = new Array(12).fill(0);
-	for (let i = 0; i < 12; i++) {
-		const [a, b] = EDGE_FACELETS[i].map((idx) => fc[idx]);
-		const j0 = EDGE_COLORS.findIndex((ec) => ec[0] === a && ec[1] === b);
-		const j1 = EDGE_COLORS.findIndex((ec) => ec[0] === b && ec[1] === a);
-		if (j0 >= 0) ep[i] = j0;
-		else if (j1 >= 0) {
-			ep[i] = j1;
-			eo[i] = 1;
-		} else errors.push(`No edge has the colours ${colorList([a, b])} (at ${EDGE_NAMES[i]}).`);
-	}
+	});
+
+	const corners = identifyPieces(
+		'corner',
+		CORNER_FACELETS,
+		CORNER_COLORS,
+		CORNER_NAMES,
+		fc,
+		(cols) => {
+			const ori = cols.findIndex((c) => c === U || c === D);
+			const piece =
+				ori < 0
+					? -1
+					: CORNER_COLORS.findIndex(
+							(cc) =>
+								cc[0] === cols[ori] &&
+								cc[1] === cols[(ori + 1) % 3] &&
+								cc[2] === cols[(ori + 2) % 3]
+						);
+			return { piece, ori };
+		}
+	);
+	const edges = identifyPieces('edge', EDGE_FACELETS, EDGE_COLORS, EDGE_NAMES, fc, ([a, b]) => {
+		const straight = EDGE_COLORS.findIndex((ec) => ec[0] === a && ec[1] === b);
+		if (straight >= 0) return { piece: straight, ori: 0 };
+		return { piece: EDGE_COLORS.findIndex((ec) => ec[0] === b && ec[1] === a), ori: 1 };
+	});
+	errors.push(...corners.errors, ...edges.errors);
 	if (errors.length) return { ok: false, errors };
 
-	for (let j = 0; j < 8; j++) {
-		const n = cp.filter((v) => v === j).length;
-		if (n > 1) errors.push(`The ${colorList(CORNER_COLORS[j])} corner appears ${n} times.`);
-	}
-	for (let j = 0; j < 12; j++) {
-		const n = ep.filter((v) => v === j).length;
-		if (n > 1) errors.push(`The ${colorList(EDGE_COLORS[j])} edge appears ${n} times.`);
-	}
-	if (errors.length) return { ok: false, errors };
-
+	const cp = corners.pieces;
+	const co = corners.oris;
+	const ep = edges.pieces;
+	const eo = edges.oris;
+	const unreachable = (message: string) => errors.push({ message, facelets: [] });
 	if (co.reduce((s, v) => s + v, 0) % 3 !== 0) {
-		errors.push('One corner is twisted in place — this position cannot be reached by turning.');
+		unreachable('One corner is twisted in place — this position cannot be reached by turning.');
 	}
 	if (eo.reduce((s, v) => s + v, 0) % 2 !== 0) {
-		errors.push('One edge is flipped in place — this position cannot be reached by turning.');
+		unreachable('One edge is flipped in place — this position cannot be reached by turning.');
 	}
 	if (permutationParity(cp) !== permutationParity(ep)) {
-		errors.push('Two pieces are swapped — this position cannot be reached by turning.');
+		unreachable('Two pieces are swapped — this position cannot be reached by turning.');
 	}
 	if (errors.length) return { ok: false, errors };
 

@@ -4,8 +4,7 @@ import type { CubieCube } from './cubie';
 import { initTables, solve, type SolveOptions } from './solver';
 
 export type SolverRequest =
-	| { type: 'init' }
-	| { type: 'solve'; id: number; cube: CubieCube; options?: SolveOptions };
+	{ type: 'init' } | { type: 'solve'; id: number; cube: CubieCube; options?: SolveOptions };
 export type SolverResponse = { type: 'ready' } | { type: 'solved'; id: number; moves: number[] };
 
 self.onmessage = (e: MessageEvent<SolverRequest>) => {

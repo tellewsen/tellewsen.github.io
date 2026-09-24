@@ -80,7 +80,7 @@ describe('cubie moves', () => {
 		}
 	});
 
-	it('sexy move (R U R\' U\') has order 6', () => {
+	it("sexy move (R U R' U') has order 6", () => {
 		const alg = parseMoves("R U R' U'");
 		let c = solvedCube();
 		for (let i = 1; i <= 6; i++) {

@@ -25,6 +25,14 @@ describe('/utils/cube page', () => {
 		await fireEvent.click(screen.getByRole('button', { name: 'Paint red' }));
 		await fireEvent.click(screen.getByLabelText('Up face, sticker 1, white'));
 		expect(screen.getByText('There are 10 red stickers, expected 9.')).toBeInTheDocument();
+		const cornerError = screen.getByRole('button', {
+			name: 'The top-back-left corner is red-orange-blue, but no corner has those colours.'
+		});
+		// All flagged stickers flash; hovering an error narrows it to that piece.
+		expect(screen.getByLabelText('Up face, sticker 1, red')).toHaveClass('flagged');
+		await fireEvent.mouseEnter(cornerError);
+		expect(screen.getByLabelText('Left face, sticker 1, orange')).toHaveClass('flagged');
+		expect(screen.getByLabelText('Up face, sticker 2, white')).not.toHaveClass('flagged');
 	});
 
 	it('solves a random cube and steps through the solution', async () => {

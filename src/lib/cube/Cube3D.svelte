@@ -9,6 +9,8 @@
 	export let colors: string[];
 	export let colorNames: string[];
 	export let editable = true;
+	/** Facelets to mark, e.g. the stickers of a piece that can't exist. */
+	export let highlight: number[] = [];
 	export let rx = -25;
 	export let ry = -35;
 
@@ -57,9 +59,12 @@
 						type="button"
 						class="sticker"
 						class:unpainted={c === null}
+						class:flagged={highlight.includes(i)}
 						style:background={c === null ? null : colors[c]}
 						disabled={!editable || isCenter(i)}
-						aria-label="{FACE_LABELS[f]} face, sticker {k + 1}, {c === null ? 'unpainted' : colorNames[c]}"
+						aria-label="{FACE_LABELS[f]} face, sticker {k + 1}, {c === null
+							? 'unpainted'
+							: colorNames[c]}"
 						on:click={() => onStickerClick(i)}
 					></button>
 				{/each}
@@ -125,6 +130,19 @@
 	}
 	.sticker.unpainted {
 		background: var(--dim);
+	}
+	.sticker.flagged {
+		outline: 3px solid #ff2bd6;
+		outline-offset: -3px;
+		animation: pulse 1s ease-in-out infinite alternate;
+	}
+	@keyframes pulse {
+		from {
+			outline-color: #ff2bd6;
+		}
+		to {
+			outline-color: transparent;
+		}
 	}
 	.sticker:not(:disabled):hover {
 		filter: brightness(1.15);

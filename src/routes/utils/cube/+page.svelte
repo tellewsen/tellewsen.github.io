@@ -25,11 +25,22 @@
 	let requestId = 0;
 	let pendingStart: CubieCube | null = null;
 
+	// Error whose stickers are highlighted alone (hovered/focused); otherwise
+	// the stickers of every error are highlighted.
+	let focusedError: number | null = null;
+
 	let solution: { start: CubieCube; moves: number[] } | null = null;
 	let step = 0;
 	let playTimer: ReturnType<typeof setInterval> | null = null;
 
 	$: parsed = fromFacelets(facelets);
+	$: errors = parsed.ok ? [] : parsed.errors;
+	$: if (focusedError !== null && focusedError >= errors.length) focusedError = null;
+	$: highlight = solution
+		? []
+		: focusedError !== null
+			? errors[focusedError].facelets
+			: errors.flatMap((e) => e.facelets);
 	$: shown = solution
 		? toFacelets(applyMoves(solution.start, solution.moves.slice(0, step)))
 		: facelets;
@@ -165,6 +176,7 @@
 		colors={COLORS}
 		colorNames={COLOR_NAMES}
 		editable={!solution}
+		{highlight}
 		bind:rx
 		bind:ry
 		on:paint={(e) => paint(e.detail)}
@@ -172,11 +184,15 @@
 
 	<div class="card actions-card">
 		<div class="row">
-			<button type="button" class="btn btn-secondary" on:click={() => (ry -= 90)}>◀ Turn view</button>
+			<button type="button" class="btn btn-secondary" on:click={() => (ry -= 90)}
+				>◀ Turn view</button
+			>
 			<button type="button" class="btn btn-secondary" on:click={() => (rx = rx < 0 ? 25 : -25)}
 				>{rx < 0 ? 'Show bottom' : 'Show top'}</button
 			>
-			<button type="button" class="btn btn-secondary" on:click={() => (ry += 90)}>Turn view ▶</button>
+			<button type="button" class="btn btn-secondary" on:click={() => (ry += 90)}
+				>Turn view ▶</button
+			>
 		</div>
 		<div class="row">
 			<button type="button" class="btn btn-secondary" on:click={() => setFacelets(blankFacelets())}
@@ -242,17 +258,34 @@
 			<button type="button" class="btn btn-secondary" on:click={clearSolution}>Edit cube</button>
 		{:else if !parsed.ok}
 			<ul class="errors">
-				{#each parsed.errors as error}
-					<li>{error}</li>
+				{#each errors as error, i}
+					<li>
+						{#if error.facelets.length}
+							<button
+								type="button"
+								class="error-link"
+								on:mouseenter={() => (focusedError = i)}
+								on:mouseleave={() => (focusedError = null)}
+								on:focus={() => (focusedError = i)}
+								on:blur={() => (focusedError = null)}>{error.message}</button
+							>
+						{:else}
+							{error.message}
+						{/if}
+					</li>
 				{/each}
 			</ul>
+			{#if highlight.length}
+				<p class="hint">
+					Problem stickers are flashing on the cube — hover an error to see only its stickers.
+				</p>
+			{/if}
 		{:else}
 			<button
 				type="button"
 				class="btn btn-primary"
 				disabled={!ready || solving}
-				on:click={handleSolve}
-				>{solving ? 'Solving…' : ready ? 'Solve' : 'Loading solver…'}</button
+				on:click={handleSolve}>{solving ? 'Solving…' : ready ? 'Solve' : 'Loading solver…'}</button
 			>
 		{/if}
 	</div>
@@ -262,9 +295,12 @@
 			<summary>Move notation</summary>
 			<ul class="rules-list">
 				<li>
-					Letters name a face: U (up/top), D (down/bottom), F (front), B (back), R (right), L (left).
+					Letters name a face: U (up/top), D (down/bottom), F (front), B (back), R (right), L
+					(left).
 				</li>
-				<li>A letter alone means turn that face a quarter turn clockwise, as seen looking at it.</li>
+				<li>
+					A letter alone means turn that face a quarter turn clockwise, as seen looking at it.
+				</li>
 				<li>' (prime) means counter-clockwise; 2 means half a turn.</li>
 				<li>Keep holding the cube the same way (white top, green front) the whole time.</li>
 			</ul>
@@ -328,6 +364,16 @@
 		padding-left: 18px;
 		font-size: 13px;
 		color: var(--accent3);
+	}
+	.error-link {
+		background: none;
+		border: none;
+		padding: 0;
+		font: inherit;
+		color: inherit;
+		text-align: left;
+		cursor: help;
+		text-decoration: underline dotted;
 	}
 	.hint {
 		font-size: 13px;
