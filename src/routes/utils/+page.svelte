@@ -41,6 +41,10 @@
 			<div class="util-name">tenk</div>
 			<div class="util-desc">Optimal-play "10,000" dice game assistant</div>
 		</a>
+		<a href="/utils/cube" class="card util-card">
+			<div class="util-name">cube</div>
+			<div class="util-desc">Rubik's cube solver</div>
+		</a>
 	</div>
 </section>
 

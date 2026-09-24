@@ -19,9 +19,9 @@ pnpm test:watch    # Run tests in watch mode
 `pnpm deploy`, or a stale/incomplete local `build/` gets silently published
 (e.g. missing new routes).
 
-Test suite: Vitest, covering src/lib/tenk/ (pure logic — solver golden
-values, state transitions, recommendations) and one component test file
-for /utils/tenk. No tests exist yet for other routes/components.
+Test suite: Vitest, covering src/lib/tenk/ and src/lib/cube/ (pure logic)
+plus component tests for /utils/tenk and /utils/cube. No tests exist yet
+for other routes/components.
 
 ## Architecture
 
@@ -40,6 +40,15 @@ This is a **SvelteKit static site** (adapter-static) deployed to GitHub Pages at
   state space is small enough to solve in milliseconds. Ported from
   `tenk-solver` (sibling repo); if its Go rules ever change, this needs
   manual re-porting, same as yatzy's vendoring note above.
+- `src/routes/utils/cube/` — Rubik's cube (3x3) solver: paint a CSS-3D cube
+  (`src/lib/cube/Cube3D.svelte`), solve with a native TypeScript port of
+  Kociemba's two-phase algorithm running in a Web Worker
+  (`solver.worker.ts`, tables built on load in ~0.6s). `src/lib/cube/` is
+  layered so shape mods (planned: Mastermorphix) only need a new input
+  layer: `cubie.ts` models the mechanism (incl. center orientation `ct`,
+  unused by the 3x3 solver), `facelet.ts` is the 3x3 sticker layer,
+  `coord.ts` + `solver.ts` are the search. `cubie.test.ts` checks the move
+  tables against an independent geometric sticker-rotation model.
 - `src/routes/about/` — empty directory (about page not yet created)
 
 ### Blog post pattern
