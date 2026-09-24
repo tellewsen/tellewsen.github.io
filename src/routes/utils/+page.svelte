@@ -45,6 +45,10 @@
 			<div class="util-name">cube</div>
 			<div class="util-desc">Rubik's cube solver</div>
 		</a>
+		<a href="/utils/mastermorphix" class="card util-card">
+			<div class="util-name">mastermorphix</div>
+			<div class="util-desc">Mastermorphix solver</div>
+		</a>
 	</div>
 </section>
 

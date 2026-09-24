@@ -181,8 +181,13 @@ function shuffled(n: number, rand: () => number): number[] {
 	return a;
 }
 
-/** Uniformly random reachable 3x3 state (centers left solved). */
-export function randomCube(rand: () => number = Math.random): CubieCube {
+/**
+ * Uniformly random reachable state. Centers are left solved unless
+ * `withCenters`, in which case they get random turns too — subject to the
+ * rule that every quarter turn both turns a center and makes an odd corner
+ * permutation, so the total center turn count has the corner parity.
+ */
+export function randomCube(rand: () => number = Math.random, withCenters = false): CubieCube {
 	const cp = shuffled(8, rand);
 	const ep = shuffled(12, rand);
 	// Corner and edge permutation parity must agree; swap two edges if not.
@@ -191,5 +196,10 @@ export function randomCube(rand: () => number = Math.random): CubieCube {
 	co[7] = (3 - (co.slice(0, 7).reduce((s, v) => s + v, 0) % 3)) % 3;
 	const eo = Array.from({ length: 12 }, () => Math.floor(rand() * 2));
 	eo[11] = eo.slice(0, 11).reduce((s, v) => s + v, 0) % 2;
-	return { cp, co, ep, eo, ct: [0, 0, 0, 0, 0, 0] };
+	const ct = [0, 0, 0, 0, 0, 0];
+	if (withCenters) {
+		for (let f = 0; f < 6; f++) ct[f] = Math.floor(rand() * 4);
+		if ((ct.reduce((s, v) => s + v, 0) + permutationParity(cp)) % 2) ct[5] = (ct[5] + 1) % 4;
+	}
+	return { cp, co, ep, eo, ct };
 }

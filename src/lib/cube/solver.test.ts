@@ -77,4 +77,20 @@ describe('solve', () => {
 			expect(solution.length).toBeLessThanOrEqual(22);
 		}
 	}, 30_000);
+
+	it('with centers: solves center orientation too', () => {
+		for (let i = 0; i < 10; i++) {
+			const c = randomCube(Math.random, true);
+			const solution = solve(c, { centers: true, timeoutMs: 500 });
+			expect(isSolved(applyMoves(c, solution), true)).toBe(true);
+		}
+	}, 60_000);
+
+	it('with centers: fixes a lone half-turned center', () => {
+		const c = solvedCube();
+		c.ct[0] = 2;
+		const solution = solve(c, { centers: true, timeoutMs: 2000 });
+		expect(solution.length).toBeGreaterThan(0);
+		expect(isSolved(applyMoves(c, solution), true)).toBe(true);
+	}, 30_000);
 });

@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import Cube3D from '$lib/cube/Cube3D.svelte';
-	import { type CubieCube, applyMoves, randomCube, solvedCube, MOVE_NAMES } from '$lib/cube/cubie';
+	import SolutionSteps from '$lib/cube/SolutionSteps.svelte';
+	import { type CubieCube, applyMoves, randomCube, solvedCube } from '$lib/cube/cubie';
 	import {
 		type Facelets,
 		blankFacelets,
@@ -9,7 +10,7 @@
 		fromFacelets,
 		COLOR_NAMES
 	} from '$lib/cube/facelet';
-	import type { SolverRequest, SolverResponse } from '$lib/cube/solver.worker';
+	import { createSolverClient, type SolverClient } from '$lib/cube/solverClient';
 
 	const COLORS = ['#f4f4f4', '#d32f2f', '#089b48', '#ffd500', '#ff6d00', '#0b4fb3'];
 	const FACE_WORDS = ['top', 'right', 'front', 'bottom', 'left', 'back'];
@@ -19,7 +20,7 @@
 	let rx = -25;
 	let ry = -35;
 
-	let worker: Worker | null = null;
+	let solver: SolverClient | null = null;
 	let ready = false;
 	let solving = false;
 	let requestId = 0;
@@ -31,7 +32,6 @@
 
 	let solution: { start: CubieCube; moves: number[] } | null = null;
 	let step = 0;
-	let playTimer: ReturnType<typeof setInterval> | null = null;
 
 	$: parsed = fromFacelets(facelets);
 	$: errors = parsed.ok ? [] : parsed.errors;
@@ -46,24 +46,12 @@
 		: facelets;
 
 	onMount(async () => {
-		if (typeof Worker === 'undefined') {
-			ready = true;
-			return;
-		}
-		const { default: SolverWorker } = await import('$lib/cube/solver.worker?worker');
-		worker = new SolverWorker();
-		worker.onmessage = (e: MessageEvent<SolverResponse>) => {
-			const msg = e.data;
-			if (msg.type === 'ready') ready = true;
-			else if (msg.id === requestId) showSolution(msg.moves);
-		};
-		worker.postMessage({ type: 'init' } satisfies SolverRequest);
+		solver = await createSolverClient();
+		await solver.ready;
+		ready = true;
 	});
 
-	onDestroy(() => {
-		worker?.terminate();
-		stopPlaying();
-	});
+	onDestroy(() => solver?.destroy());
 
 	// Any edit makes an in-flight solve stale.
 	function cancelSolve() {
@@ -89,13 +77,8 @@
 		solving = true;
 		pendingStart = cube;
 		const id = ++requestId;
-		if (worker) {
-			worker.postMessage({ type: 'solve', id, cube } satisfies SolverRequest);
-		} else {
-			const { solve } = await import('$lib/cube/solver');
-			const moves = solve(cube);
-			if (id === requestId) showSolution(moves);
-		}
+		const { moves } = await solver!.solve([cube]);
+		if (id === requestId) showSolution(moves);
 	}
 
 	function showSolution(moves: number[]) {
@@ -106,26 +89,8 @@
 	}
 
 	function clearSolution() {
-		stopPlaying();
 		solution = null;
 		step = 0;
-	}
-
-	function goTo(n: number) {
-		if (!solution) return;
-		step = Math.max(0, Math.min(solution.moves.length, n));
-		if (step === solution.moves.length) stopPlaying();
-	}
-
-	function togglePlay() {
-		if (playTimer) return stopPlaying();
-		if (solution && step === solution.moves.length) step = 0;
-		playTimer = setInterval(() => goTo(step + 1), 700);
-	}
-
-	function stopPlaying() {
-		if (playTimer) clearInterval(playTimer);
-		playTimer = null;
 	}
 
 	function describeMove(m: number): string {
@@ -146,7 +111,8 @@
 	<p class="intro">
 		Rubik's cube (3x3) solver. Hold your cube with the <strong>white</strong> center on top and the
 		<strong>green</strong> center facing you, then paint the stickers to match: pick a colour and click
-		stickers. Drag the cube to see the other sides. Runs entirely in your browser.
+		stickers. Drag the cube to see the other sides. Runs entirely in your browser. Got a
+		<a href="/utils/mastermorphix">Mastermorphix</a>? It has its own solver.
 	</p>
 
 	<div class="card palette-card">
@@ -213,48 +179,7 @@
 
 	<div class="card solve-card">
 		{#if solution}
-			{#if solution.moves.length === 0}
-				<p class="hint">Already solved.</p>
-			{:else}
-				<div class="moves" aria-label="Solution">
-					{#each solution.moves as m, i}
-						<button
-							type="button"
-							class="move"
-							class:move-done={i < step}
-							class:move-next={i === step}
-							on:click={() => goTo(i + 1)}>{MOVE_NAMES[m]}</button
-						>
-					{/each}
-				</div>
-				<p class="hint">
-					{solution.moves.length} moves.
-					{#if step < solution.moves.length}
-						Step {step + 1}: <strong>{MOVE_NAMES[solution.moves[step]]}</strong> — {describeMove(
-							solution.moves[step]
-						)}.
-					{:else}
-						Solved!
-					{/if}
-				</p>
-				<div class="row">
-					<button type="button" class="btn btn-secondary" on:click={() => goTo(0)}>⏮</button>
-					<button type="button" class="btn btn-secondary" on:click={() => goTo(step - 1)}
-						>◀ Back</button
-					>
-					<button type="button" class="btn btn-secondary" on:click={togglePlay}
-						>{playTimer ? 'Pause' : 'Play'}</button
-					>
-					<button type="button" class="btn btn-secondary" on:click={() => goTo(step + 1)}
-						>Next ▶</button
-					>
-					<button
-						type="button"
-						class="btn btn-secondary"
-						on:click={() => goTo(solution ? solution.moves.length : 0)}>⏭</button
-					>
-				</div>
-			{/if}
+			<SolutionSteps moves={solution.moves} bind:step describe={describeMove} />
 			<button type="button" class="btn btn-secondary" on:click={clearSolution}>Edit cube</button>
 		{:else if !parsed.ok}
 			<ul class="errors">
@@ -379,33 +304,6 @@
 		font-size: 13px;
 		color: var(--muted);
 		margin: 10px 0;
-	}
-	.hint strong {
-		color: var(--bright);
-	}
-	.moves {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 6px;
-	}
-	.move {
-		min-width: 38px;
-		padding: 4px 8px;
-		font-family: var(--mono);
-		font-size: 13px;
-		background: transparent;
-		color: var(--text);
-		border: 1px solid var(--border);
-		border-radius: 4px;
-		cursor: pointer;
-	}
-	.move-done {
-		color: var(--muted);
-		border-color: transparent;
-	}
-	.move-next {
-		border-color: var(--accent);
-		color: var(--accent);
 	}
 	.solve-card > .btn-secondary {
 		margin-top: 10px;

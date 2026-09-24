@@ -127,7 +127,7 @@ const POSITION_WORDS: Record<string, string> = {
 const POSITION_ORDER = 'UDFBLR';
 
 /** "URF" -> "top-front-right", as seen holding the cube white top, green front. */
-function slotName(letters: string): string {
+export function slotName(letters: string): string {
 	return [...letters]
 		.sort((a, b) => POSITION_ORDER.indexOf(a) - POSITION_ORDER.indexOf(b))
 		.map((l) => POSITION_WORDS[l])

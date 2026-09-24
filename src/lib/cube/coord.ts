@@ -132,3 +132,33 @@ export function setSlicePerm(c: CubieCube, r: number): void {
 
 const solved = solvedCube();
 export const SOLVED_SLICE = getSlice(solved);
+
+// Center orientation, for supercubes / the Mastermorphix. Phase 1 must also
+// make the R/F/L/B centers an even number of quarter turns off (phase 2 can
+// only turn those faces by half turns); phase 2 then finishes all centers.
+const SIDE_FACES = [1, 2, 4, 5]; // R F L B
+
+export const N_CENTER_PARITY = 16;
+export const N_CENTERS2 = 256;
+
+export function getCenterParity(c: CubieCube): number {
+	return SIDE_FACES.reduce((v, f, k) => v | ((c.ct[f] & 1) << k), 0);
+}
+
+export function setCenterParity(c: CubieCube, v: number): void {
+	SIDE_FACES.forEach((f, k) => (c.ct[f] = (v >> k) & 1));
+}
+
+/** U and D centers mod 4, R/F/L/B as 0 or a half turn. Only meaningful in phase 2. */
+export function getCenters2(c: CubieCube): number {
+	return SIDE_FACES.reduce(
+		(v, f, k) => v | (((c.ct[f] >> 1) & 1) << (4 + k)),
+		c.ct[0] + 4 * c.ct[3]
+	);
+}
+
+export function setCenters2(c: CubieCube, v: number): void {
+	c.ct[0] = v & 3;
+	c.ct[3] = (v >> 2) & 3;
+	SIDE_FACES.forEach((f, k) => (c.ct[f] = ((v >> (4 + k)) & 1) * 2));
+}
