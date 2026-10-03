@@ -1,11 +1,17 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import Morphix3D from '$lib/cube/Morphix3D.svelte';
-	import SolutionSteps from '$lib/cube/SolutionSteps.svelte';
-	import { type CubieCube, applyMoves, randomCube, solvedCube } from '$lib/cube/cubie';
-	import { CENTER_SLOT, SLOT_POSITIONS, pieceAt, slotKind } from '$lib/cube/geometry';
-	import { checkMorphix, pieceColors, pieceName, slotLook, slotOptions } from '$lib/cube/morphix';
-	import { createSolverClient, type SolverClient } from '$lib/cube/solverClient';
+	import Morphix3D from '#lib/cube/Morphix3D.svelte';
+	import SolutionSteps from '#lib/cube/SolutionSteps.svelte';
+	import { type CubieCube, applyMoves, randomCube, solvedCube } from '#lib/cube/cubie.ts';
+	import { CENTER_SLOT, SLOT_POSITIONS, pieceAt, slotKind } from '#lib/cube/geometry.ts';
+	import {
+		checkMorphix,
+		pieceColors,
+		pieceName,
+		slotLook,
+		slotOptions
+	} from '#lib/cube/morphix.ts';
+	import { createSolverClient, type SolverClient } from '#lib/cube/solverClient.ts';
 
 	const PRESETS: Record<string, string> = {
 		red: '#d32f2f',

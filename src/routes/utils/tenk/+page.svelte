@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { type GameState, type Ruleset } from '$lib/tenk/state';
+	import { type GameState, type Ruleset } from '#lib/tenk/state.ts';
 	import {
 		initialMatchState,
 		addOpponent,
 		removeOpponent,
 		updateOpponentScore,
 		type MatchState
-	} from '$lib/tenk/match';
-	import { getRollAdvice, type RollAdvice, type BasicBankOption } from '$lib/tenk/recommend';
+	} from '#lib/tenk/match.ts';
+	import { getRollAdvice, type RollAdvice, type BasicBankOption } from '#lib/tenk/recommend.ts';
 
 	const PIP_LAYOUTS: Record<number, string[]> = {
 		1: ['mc'],

@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect } from 'vitest';
 import { render, fireEvent, screen } from '@testing-library/svelte';
-import { CENTER_SLOT } from '$lib/cube/geometry';
+import { CENTER_SLOT } from '#lib/cube/geometry.ts';
 import Page from './+page.svelte';
 
 async function clickPiece(container: HTMLElement, slot: number) {

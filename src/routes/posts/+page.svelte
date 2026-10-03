@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Timestamp from '$lib/Timestamp.svelte';
+	import Timestamp from '#lib/Timestamp.svelte';
 	export let data;
 </script>
 

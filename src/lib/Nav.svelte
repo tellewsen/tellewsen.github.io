@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
-	$: path = $page.url.pathname;
+	const path = $derived(page.url.pathname);
 </script>
 
 <nav>

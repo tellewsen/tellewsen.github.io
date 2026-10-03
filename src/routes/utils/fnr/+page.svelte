@@ -1,5 +1,5 @@
 <script>
-	import FnrGenerator from '$lib/FnrGenerator.svelte';
+	import FnrGenerator from '#lib/FnrGenerator.svelte';
 </script>
 
 <title>Generator for norwegian national identification numbers</title>

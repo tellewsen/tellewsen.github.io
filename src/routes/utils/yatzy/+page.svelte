@@ -5,7 +5,7 @@
 		withActiveGameState,
 		afterScore,
 		type MatchState
-	} from '$lib/yatzy/match';
+	} from '#lib/yatzy/match.ts';
 	import {
 		setDice,
 		advanceReroll,
@@ -20,10 +20,10 @@
 		CATEGORY_NAMES,
 		NUM_CATEGORIES,
 		UPPER_CATEGORY_COUNT
-	} from '$lib/yatzy/state';
-	import { isValidScore } from '$lib/yatzy/scoreValidation';
-	import { getRecommendation } from '$lib/yatzy/wasmEngine';
-	import type { QueryResult } from '$lib/yatzy/parseResult';
+	} from '#lib/yatzy/state.ts';
+	import { isValidScore } from '#lib/yatzy/scoreValidation.ts';
+	import { getRecommendation } from '#lib/yatzy/wasmEngine.ts';
+	import type { QueryResult } from '#lib/yatzy/parseResult.ts';
 
 	const PIP_LAYOUTS: Record<number, string[]> = {
 		1: ['mc'],

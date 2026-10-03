@@ -1,16 +1,16 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import Cube3D from '$lib/cube/Cube3D.svelte';
-	import SolutionSteps from '$lib/cube/SolutionSteps.svelte';
-	import { type CubieCube, applyMoves, randomCube, solvedCube } from '$lib/cube/cubie';
+	import Cube3D from '#lib/cube/Cube3D.svelte';
+	import SolutionSteps from '#lib/cube/SolutionSteps.svelte';
+	import { type CubieCube, applyMoves, randomCube, solvedCube } from '#lib/cube/cubie.ts';
 	import {
 		type Facelets,
 		blankFacelets,
 		toFacelets,
 		fromFacelets,
 		COLOR_NAMES
-	} from '$lib/cube/facelet';
-	import { createSolverClient, type SolverClient } from '$lib/cube/solverClient';
+	} from '#lib/cube/facelet.ts';
+	import { createSolverClient, type SolverClient } from '#lib/cube/solverClient.ts';
 
 	const COLORS = ['#f4f4f4', '#d32f2f', '#089b48', '#ffd500', '#ff6d00', '#0b4fb3'];
 	const FACE_WORDS = ['top', 'right', 'front', 'bottom', 'left', 'back'];

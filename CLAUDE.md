@@ -71,7 +71,7 @@ This is a **SvelteKit static site** (adapter-static) deployed to GitHub Pages at
 Each post lives in `src/routes/posts/YYYYMMDD/`:
 
 - `+page.js` — exports a `load()` that returns `{ metadata: { title, date } }` (date as ISO string). This is how the post index discovers and sorts posts.
-- `+page.svelte` — imports `Timestamp` from `$lib`, renders `data.metadata.title` and `data.metadata.date`.
+- `+page.svelte` — imports `Timestamp` from `#lib/Timestamp.svelte`, renders `data.metadata.title` and `data.metadata.date`.
 
 The post index (`src/routes/posts/+page.ts`) uses `import.meta.glob('./*/+page.js')` to discover all posts dynamically and sorts them by date descending.
 
@@ -88,5 +88,15 @@ The post index (`src/routes/posts/+page.ts`) uses `import.meta.glob('./*/+page.j
 
 ### Key config
 
-- `svelte.config.js` — uses `adapter-static`, renames `_app` to `internal` (avoids GitHub Pages Jekyll processing), base path is `''` for custom domain
+- `vite.config.ts` — SvelteKit 3 has no `svelte.config.js`; its options go to
+  `sveltekit({...})` here: `adapter-static`, renames `_app` to `internal`
+  (avoids GitHub Pages Jekyll processing), base path is `''` for custom domain
+- `#lib` (not `$lib`, removed in Kit 3) is a `package.json` `imports` alias for
+  `src/lib`. TypeScript doesn't add extensions to `#` imports, so write them
+  in full: `'#lib/tenk/state.ts'`, `'#lib/Nav.svelte'`.
+- `tsconfig.json` extends `$app/tsconfig` and excludes `worker.js` (the
+  standalone Cloudflare Worker) and the generated Emscripten glue
+  `src/lib/yatzy/wasm/yatzy_engine.js` (typed by its `.d.ts`).
+- TypeScript is held at 6.x: SvelteKit 3 and svelte-check use the JS compiler
+  API, which TypeScript 7 (the native port) no longer has.
 - Prettier: tabs, single quotes, no trailing commas
