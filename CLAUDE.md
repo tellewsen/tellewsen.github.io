@@ -24,9 +24,10 @@ publishing, and stops if either fails. Nothing else enforces formatting (no
 pre-commit hook, no CI), so run `pnpm format` before committing or deploy
 will refuse. Deploy only after the latest commit is pushed.
 
-Test suite: Vitest, covering src/lib/tenk/ and src/lib/cube/ (pure logic)
-plus component tests for /utils/tenk, /utils/cube and /utils/mastermorphix. No tests exist yet
-for other routes/components.
+Test suite: Vitest, covering src/lib/tenk/, src/lib/cube/ and src/lib/sun/
+(pure logic) plus component tests for /utils/tenk, /utils/cube,
+/utils/mastermorphix and /utils/sun. No tests exist yet for other
+routes/components.
 
 ## Architecture
 
@@ -66,6 +67,16 @@ This is a **SvelteKit static site** (adapter-static) deployed to GitHub Pages at
   `only`). `solverClient.ts` (worker wrapper) and `SolutionSteps.svelte`
   are shared with the cube page. UI text uses puzzle-holder names: tip,
   face center, edge (2-colour), side piece (1-colour) — see `KIND_NAMES`.
+- `src/routes/utils/sun/` — sun path through the day and year (daily circles,
+  the yearly helix, the analemma) for a chosen latitude/longitude, with the
+  full derivation on the page. `src/lib/sun/sun.ts` is the pure model (Kepler
+  orbit + tilt + horizon rotation; its `§n` comments match the sections in
+  `Derivation.svelte`). Maths is rendered with KaTeX (`Tex.svelte`) at
+  prerender time. `SkyDome.svelte` is a hand-rolled canvas 3D view; the charts
+  are plain SVG. `horizons.test.ts` checks the model against
+  `horizons.fixture.json`, sun positions fetched once from the JPL Horizons
+  API (query recorded in the file); the page's §8 quotes the measured errors,
+  so update both if the model changes.
 - `src/routes/about/` — empty directory (about page not yet created)
 
 ### Blog post pattern

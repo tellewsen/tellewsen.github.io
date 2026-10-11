@@ -49,6 +49,10 @@
 			<div class="util-name">mastermorphix</div>
 			<div class="util-desc">Master Pyramorphix solver</div>
 		</a>
+		<a href="/utils/sun" class="card util-card">
+			<div class="util-name">sun</div>
+			<div class="util-desc">The sun's path through the year, and the maths behind it</div>
+		</a>
 	</div>
 </section>
 
