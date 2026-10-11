@@ -1,0 +1,1 @@
+import{n as e}from"./Dd_uD5pT.js";var t=e({load:()=>n}),n=()=>({metadata:{title:`Ip Range Calculator`,date:`2025-07-23T23:45:00+02:00`}});export{t};

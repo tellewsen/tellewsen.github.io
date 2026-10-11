@@ -1,0 +1,1 @@
+function e(e){return new Worker(new URL(`../workers/solver.worker-CBirxWcQ.js`,import.meta.url).href,{name:e?.name})}export{e as default};

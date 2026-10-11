@@ -1,0 +1,1 @@
+import{n as e}from"./Dd_uD5pT.js";var t=e({load:()=>n}),n=()=>({metadata:{title:`What shape does the sun trace in the sky?`,date:`2026-10-11T21:00:00+02:00`,summary:`A new page in /utils draws the sun's path through a day and a year for anywhere on Earth, with the maths written out.`}});export{t};

@@ -1,0 +1,1 @@
+import{n as e}from"./Dd_uD5pT.js";var t=e({load:()=>n}),n=()=>({metadata:{title:`A qr code appears!`,date:`2025-07-15T09:30:05+02:00`}});export{t};

@@ -1,0 +1,1 @@
+import{n as e}from"./Dd_uD5pT.js";var t=e({load:()=>n}),n=()=>({metadata:{title:`Stuff pictures in your qr codes!`,date:`2025-07-16T08:45:00+02:00`}});export{t};

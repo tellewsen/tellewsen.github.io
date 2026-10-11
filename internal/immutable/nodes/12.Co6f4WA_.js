@@ -1,0 +1,7 @@
+import{B as e,I as t,J as n,Q as r,R as i,W as a,a as o,dt as s,et as c,ft as l,mt as u,nt as d,pt as f,rt as p,t as m}from"../chunks/DLf_x080.js";import"../chunks/CyxlzONq.js";import{t as h}from"../chunks/B1cA56Uh.js";import{t as g}from"../chunks/jqS7mWXm.js";var _=e(`<article><h1> </h1> <small><!></small> <hr/> <p>The site got a visual overhaul. The old design was functional but pretty bare — default fonts,
+		light background, no real aesthetic to speak of. The new one goes for a dark terminal look:
+		JetBrains Mono throughout, a green accent borrowed from GitHub's contribution graph, subtle
+		scanlines and a grid overlay in the background.</p> <p>I used Claude for most of it. Started in the web interface to get the homepage looking the way I
+		wanted, then used Claude Code to port it into the SvelteKit codebase and roll it out to the rest
+		of the pages. I've been more optimistic about LLMs for coding lately — it's starting to feel
+		less like fighting the tool and more like just getting things done.</p></article>`);function v(e,g){l(g,!1);let v=m(g,`data`,8);o();var y=_(),b=c(y),x=d(b,!0),S=p(b,2),C=c(S);h(C,{get iso(){return a(v()),n(()=>v().metadata.date)}}),u(S),f(6),u(y),r(()=>t(x,(a(v()),n(()=>v().metadata.title)))),i(e,y),s()}export{v as component,g as universal};

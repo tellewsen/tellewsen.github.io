@@ -1,0 +1,1 @@
+import{n as e}from"./Dd_uD5pT.js";var t=e({load:()=>n}),n=()=>({metadata:{title:`Rewriting the site with Claude`,date:`2026-03-05T12:00:00+01:00`}});export{t};

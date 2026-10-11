@@ -1,0 +1,7 @@
+import{B as e,I as t,J as n,Q as r,R as i,W as a,a as o,dt as s,et as c,ft as l,mt as u,nt as d,pt as f,rt as p,t as m}from"../chunks/DLf_x080.js";import"../chunks/CyxlzONq.js";import{t as h}from"../chunks/B1cA56Uh.js";import{t as g}from"../chunks/CbNmiyr5.js";var _=e(`<article><h1> </h1> <small><!></small> <hr/> <p>A while back I read a KTH bachelor's thesis on solving Scandinavian Yatzy optimally with
+		backward-induction dynamic programming, and wanted to try building one myself. That turned into
+		a CPU solver and a Windows desktop app that gives live move recommendations while you play a
+		real game.</p> <p>This week I compiled the same solver to WebAssembly, so there's now a <a href="/utils/yatzy">browser version</a> too. No install, runs entirely client-side. Solo mode only, since the desktop app's vs-Computer
+		mode needs a win-probability table that's too big to ship to a page. You can also click any scorecard
+		row to enter a score you already wrote down on paper, so it works fine jumping into a game that's
+		already a few turns in.</p> <p>Built with Claude Code, same as the last redesign.</p></article>`);function v(e,g){l(g,!1);let v=m(g,`data`,8);o();var y=_(),b=c(y),x=d(b,!0),S=p(b,2),C=c(S);h(C,{get iso(){return a(v()),n(()=>v().metadata.date)}}),u(S),f(8),u(y),r(()=>t(x,(a(v()),n(()=>v().metadata.title)))),i(e,y),s()}export{v as component,g as universal};
